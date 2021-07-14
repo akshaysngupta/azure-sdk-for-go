@@ -1813,7 +1813,7 @@ const fqdn = "github.com/Azure/azure-sdk-for-go/services/network/mgmt/2021-03-01
             // application gateway.
             type ApplicationGatewayLoadDistributionPolicyPropertiesFormat struct {
             // LoadDistributionTargets - Load Distribution Targets resource of an application gateway.
-            LoadDistributionTargets *ApplicationGatewayLoadDistributionTarget `json:"loadDistributionTargets,omitempty"`
+            LoadDistributionTargets *[]ApplicationGatewayLoadDistributionTarget `json:"loadDistributionTargets,omitempty"`
             // LoadDistributionAlgorithm - Load Distribution Targets resource of an application gateway. Possible values include: 'RoundRobin', 'LeastConnections', 'IPHash'
             LoadDistributionAlgorithm ApplicationGatewayLoadDistributionAlgorithm `json:"loadDistributionAlgorithm,omitempty"`
             // ProvisioningState - READ-ONLY; The provisioning state of the Load Distribution Policy resource. Possible values include: 'Succeeded', 'Updating', 'Deleting', 'Failed'
