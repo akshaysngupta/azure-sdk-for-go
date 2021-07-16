@@ -19,6 +19,13 @@ import (
 // The package's fully qualified name.
 const fqdn = "github.com/Azure/azure-sdk-for-go/services/network/mgmt/2021-03-01/network"
 
+            // AddressSpace addressSpace contains an array of IP address ranges that can be used by subnets of the
+            // virtual network.
+            type AddressSpace struct {
+            // AddressPrefixes - A list of address blocks reserved for this virtual network in CIDR notation.
+            AddressPrefixes *[]string `json:"addressPrefixes,omitempty"`
+            }
+
             // ApplicationGateway application gateway resource.
             type ApplicationGateway struct {
             autorest.Response `json:"-"`
@@ -4884,6 +4891,13 @@ const fqdn = "github.com/Azure/azure-sdk-for-go/services/network/mgmt/2021-03-01
         return nil
         }
 
+            // DhcpOptions dhcpOptions contains an array of DNS servers available to VMs deployed in the virtual
+            // network. Standard DHCP option for a subnet overrides VNET DHCP options.
+            type DhcpOptions struct {
+            // DNSServers - The list of DNS servers IP addresses.
+            DNSServers *[]string `json:"dnsServers,omitempty"`
+            }
+
             // Error common error representation.
             type Error struct {
             // Code - Error code.
@@ -5251,6 +5265,17 @@ const fqdn = "github.com/Azure/azure-sdk-for-go/services/network/mgmt/2021-03-01
             Type GatewayLoadBalancerTunnelInterfaceType `json:"type,omitempty"`
             }
 
+            // IPAddressAvailabilityResult response for CheckIPAddressAvailability API service call.
+            type IPAddressAvailabilityResult struct {
+            autorest.Response `json:"-"`
+            // Available - Private IP address availability.
+            Available *bool `json:"available,omitempty"`
+            // AvailableIPAddresses - Contains other available private IP addresses if the asked for address is taken.
+            AvailableIPAddresses *[]string `json:"availableIPAddresses,omitempty"`
+            // IsPlatformReserved - Private IP address platform reserved.
+            IsPlatformReserved *bool `json:"isPlatformReserved,omitempty"`
+            }
+
             // IPConfiguration IP configuration.
             type IPConfiguration struct {
             // IPConfigurationPropertiesFormat - Properties of the IP configuration.
@@ -5609,6 +5634,45 @@ const fqdn = "github.com/Azure/azure-sdk-for-go/services/network/mgmt/2021-03-01
                 }
                 return json.Marshal(objectMap)
         }
+
+            // IntentPolicy network Intent Policy resource.
+            type IntentPolicy struct {
+            // Etag - READ-ONLY; A unique read-only string that changes whenever the resource is updated.
+            Etag *string `json:"etag,omitempty"`
+            // ID - Resource ID.
+            ID *string `json:"id,omitempty"`
+            // Name - READ-ONLY; Resource name.
+            Name *string `json:"name,omitempty"`
+            // Type - READ-ONLY; Resource type.
+            Type *string `json:"type,omitempty"`
+            // Location - Resource location.
+            Location *string `json:"location,omitempty"`
+            // Tags - Resource tags.
+            Tags map[string]*string `json:"tags"`
+            }
+
+        // MarshalJSON is the custom marshaler for IntentPolicy.
+        func (IP IntentPolicy)MarshalJSON() ([]byte, error){
+        objectMap := make(map[string]interface{})
+                if(IP.ID != nil) {
+                objectMap["id"] = IP.ID
+                }
+                if(IP.Location != nil) {
+                objectMap["location"] = IP.Location
+                }
+                if(IP.Tags != nil) {
+                objectMap["tags"] = IP.Tags
+                }
+                return json.Marshal(objectMap)
+        }
+
+            // IntentPolicyConfiguration details of NetworkIntentPolicyConfiguration for PrepareNetworkPoliciesRequest.
+            type IntentPolicyConfiguration struct {
+            // NetworkIntentPolicyName - The name of the Network Intent Policy for storing in target subscription.
+            NetworkIntentPolicyName *string `json:"networkIntentPolicyName,omitempty"`
+            // SourceNetworkIntentPolicy - Source network intent policy.
+            SourceNetworkIntentPolicy *IntentPolicy `json:"sourceNetworkIntentPolicy,omitempty"`
+            }
 
             // Interface a network interface in a resource group.
             type Interface struct {
@@ -6429,6 +6493,14 @@ const fqdn = "github.com/Azure/azure-sdk-for-go/services/network/mgmt/2021-03-01
             Name NatGatewaySkuName `json:"name,omitempty"`
             }
 
+            // PrepareNetworkPoliciesRequest details of PrepareNetworkPolicies for Subnet.
+            type PrepareNetworkPoliciesRequest struct {
+            // ServiceName - The name of the service for which subnet is being prepared for.
+            ServiceName *string `json:"serviceName,omitempty"`
+            // NetworkIntentPolicyConfigurations - A list of NetworkIntentPolicyConfiguration.
+            NetworkIntentPolicyConfigurations *[]IntentPolicyConfiguration `json:"networkIntentPolicyConfigurations,omitempty"`
+            }
+
             // PrivateEndpoint private endpoint resource.
             type PrivateEndpoint struct {
             // ExtendedLocation - The extended location of the load balancer.
@@ -7238,6 +7310,7 @@ const fqdn = "github.com/Azure/azure-sdk-for-go/services/network/mgmt/2021-03-01
 
             // PublicIPAddress public IP address resource.
             type PublicIPAddress struct {
+            autorest.Response `json:"-"`
             // ExtendedLocation - The extended location of the public ip address.
             ExtendedLocation *ExtendedLocation `json:"extendedLocation,omitempty"`
             // Sku - The public IP address SKU.
@@ -7401,6 +7474,155 @@ const fqdn = "github.com/Azure/azure-sdk-for-go/services/network/mgmt/2021-03-01
             ReverseFqdn *string `json:"reverseFqdn,omitempty"`
             }
 
+            // PublicIPAddressListResult response for ListPublicIpAddresses API service call.
+            type PublicIPAddressListResult struct {
+            autorest.Response `json:"-"`
+            // Value - A list of public IP addresses that exists in a resource group.
+            Value *[]PublicIPAddress `json:"value,omitempty"`
+            // NextLink - The URL to get the next set of results.
+            NextLink *string `json:"nextLink,omitempty"`
+            }
+
+            // PublicIPAddressListResultIterator provides access to a complete listing of PublicIPAddress values.
+            type PublicIPAddressListResultIterator struct {
+                i int
+                page PublicIPAddressListResultPage
+            }
+        // NextWithContext advances to the next value.  If there was an error making
+        // the request the iterator does not advance and the error is returned.
+        func (iter * PublicIPAddressListResultIterator) NextWithContext(ctx context.Context) (err error) {
+        if tracing.IsEnabled() {
+        ctx = tracing.StartSpan(ctx, fqdn + "/PublicIPAddressListResultIterator.NextWithContext")
+        defer func() {
+        sc := -1
+        if iter.Response().Response.Response != nil {
+        sc = iter.Response().Response.Response.StatusCode
+        }
+        tracing.EndSpan(ctx, sc, err)
+        }()
+        }
+        iter.i++
+        if iter.i < len(iter. page.Values()) {
+        return nil
+        }
+        err = iter.page.NextWithContext(ctx)
+        if err != nil {
+        iter. i--
+        return err
+        }
+        iter.i = 0
+        return nil
+        }
+        // Next advances to the next value.  If there was an error making
+        // the request the iterator does not advance and the error is returned.
+        // Deprecated: Use NextWithContext() instead.
+        func (iter * PublicIPAddressListResultIterator) Next() error {
+        return iter.NextWithContext(context.Background())
+        }
+        // NotDone returns true if the enumeration should be started or is not yet complete.
+        func (iter PublicIPAddressListResultIterator) NotDone() bool {
+        return iter.page.NotDone() && iter.i < len(iter. page.Values())
+        }
+        // Response returns the raw server response from the last page request.
+        func (iter PublicIPAddressListResultIterator) Response() PublicIPAddressListResult {
+        return iter.page.Response()
+        }
+        // Value returns the current value or a zero-initialized value if the
+        // iterator has advanced beyond the end of the collection.
+        func (iter PublicIPAddressListResultIterator) Value() PublicIPAddress {
+        if !iter.page.NotDone() {
+        return PublicIPAddress{}
+        }
+        return iter.page.Values()[iter.i]
+        }
+        // Creates a new instance of the PublicIPAddressListResultIterator type.
+        func NewPublicIPAddressListResultIterator (page PublicIPAddressListResultPage) PublicIPAddressListResultIterator {
+        return PublicIPAddressListResultIterator{page: page}
+        }
+
+
+                // IsEmpty returns true if the ListResult contains no values.
+                func (pialr PublicIPAddressListResult) IsEmpty() bool {
+                return pialr.Value == nil || len(*pialr.Value) == 0
+                }
+
+                // hasNextLink returns true if the NextLink is not empty.
+                func (pialr PublicIPAddressListResult) hasNextLink() bool {
+                return pialr.NextLink != nil && len(*pialr.NextLink) != 0
+                }
+                    // publicIPAddressListResultPreparer prepares a request to retrieve the next set of results.
+                    // It returns nil if no more results exist.
+                    func (pialr PublicIPAddressListResult) publicIPAddressListResultPreparer(ctx context.Context) (*http.Request, error) {
+                    if !pialr.hasNextLink() {
+                    return nil, nil
+                    }
+                    return autorest.Prepare((&http.Request{}).WithContext(ctx),
+                    autorest.AsJSON(),
+                    autorest.AsGet(),
+                    autorest.WithBaseURL(to.String( pialr.NextLink)));
+                    }
+
+            // PublicIPAddressListResultPage contains a page of PublicIPAddress values.
+            type PublicIPAddressListResultPage struct {
+                fn func(context.Context, PublicIPAddressListResult) (PublicIPAddressListResult, error)
+                pialr PublicIPAddressListResult
+            }
+
+        // NextWithContext advances to the next page of values.  If there was an error making
+        // the request the page does not advance and the error is returned.
+        func (page * PublicIPAddressListResultPage) NextWithContext(ctx context.Context) (err error) {
+        if tracing.IsEnabled() {
+        ctx = tracing.StartSpan(ctx, fqdn + "/PublicIPAddressListResultPage.NextWithContext")
+        defer func() {
+        sc := -1
+        if page.Response().Response.Response != nil {
+        sc = page.Response().Response.Response.StatusCode
+        }
+        tracing.EndSpan(ctx, sc, err)
+        }()
+        }
+        for {
+        next, err := page.fn(ctx, page.pialr)
+        if err != nil {
+        return err
+        }
+        page.pialr = next
+        if !next.hasNextLink() || !next.IsEmpty() {
+        break
+        }
+        }
+        return nil
+        }
+
+        // Next advances to the next page of values.  If there was an error making
+        // the request the page does not advance and the error is returned.
+        // Deprecated: Use NextWithContext() instead.
+        func (page * PublicIPAddressListResultPage) Next() error {
+        return page.NextWithContext(context.Background())
+        }
+        // NotDone returns true if the page enumeration should be started or is not yet complete.
+        func (page PublicIPAddressListResultPage) NotDone() bool {
+        return !page.pialr.IsEmpty()
+        }
+        // Response returns the raw server response from the last page request.
+        func (page PublicIPAddressListResultPage) Response() PublicIPAddressListResult {
+        return page.pialr
+        }
+        // Values returns the slice of values for the current page or nil if there are no values.
+        func (page PublicIPAddressListResultPage) Values() []PublicIPAddress {
+        if page.pialr.IsEmpty() {
+        return nil
+        }
+        return *page.pialr.Value
+        }
+        // Creates a new instance of the PublicIPAddressListResultPage type.
+        func NewPublicIPAddressListResultPage (cur PublicIPAddressListResult, getNextPage func(context.Context, PublicIPAddressListResult) (PublicIPAddressListResult, error)) PublicIPAddressListResultPage {
+        return PublicIPAddressListResultPage{
+        fn: getNextPage,
+        pialr: cur,
+        }
+        }
+
             // PublicIPAddressPropertiesFormat public IP address properties.
             type PublicIPAddressPropertiesFormat struct {
             // PublicIPAllocationMethod - The public IP address allocation method. Possible values include: 'Static', 'Dynamic'
@@ -7489,6 +7711,82 @@ const fqdn = "github.com/Azure/azure-sdk-for-go/services/network/mgmt/2021-03-01
             // Tier - Tier of a public IP address SKU. Possible values include: 'Regional', 'Global'
             Tier PublicIPAddressSkuTier `json:"tier,omitempty"`
             }
+
+            // PublicIPAddressesCreateOrUpdateFuture an abstraction for monitoring and retrieving the results of a
+            // long-running operation.
+            type PublicIPAddressesCreateOrUpdateFuture struct {
+            azure.FutureAPI
+            // Result returns the result of the asynchronous operation.
+            // If the operation has not completed it will return an error.
+            Result func(PublicIPAddressesClient) (PublicIPAddress, error)
+            }
+        // UnmarshalJSON is the custom unmarshaller for CreateFuture.
+        func (future *PublicIPAddressesCreateOrUpdateFuture) UnmarshalJSON(body []byte) error {
+            var azFuture azure.Future
+            if err := json.Unmarshal(body, &azFuture); err != nil {
+                return err
+            }
+            future.FutureAPI = &azFuture
+            future.Result = future.result
+            return nil
+        }
+        // result is the default implementation for PublicIPAddressesCreateOrUpdateFuture.Result.
+        func (future *PublicIPAddressesCreateOrUpdateFuture) result(client PublicIPAddressesClient) (pia PublicIPAddress, err error) {
+            var done bool
+            done, err = future.DoneWithContext(context.Background(), client)
+            if err != nil {
+                err = autorest.NewErrorWithError(err, "network.PublicIPAddressesCreateOrUpdateFuture", "Result", future.Response(), "Polling failure")
+                return
+            }
+            if !done {
+                    pia.Response.Response = future.Response()
+                err = azure.NewAsyncOpIncompleteError("network.PublicIPAddressesCreateOrUpdateFuture")
+                return
+            }
+            sender := autorest.DecorateSender(client, autorest.DoRetryForStatusCodes(client.RetryAttempts, client.RetryDuration, autorest.StatusCodesForRetry...))
+            if pia.Response.Response, err = future.GetResult(sender); err == nil && pia.Response.Response.StatusCode != http.StatusNoContent {
+            pia, err = client.CreateOrUpdateResponder(pia.Response.Response)
+            if err != nil {
+            err = autorest.NewErrorWithError(err, "network.PublicIPAddressesCreateOrUpdateFuture", "Result", pia.Response.Response, "Failure responding to request")
+            }
+            }
+            return
+        }
+
+            // PublicIPAddressesDeleteFuture an abstraction for monitoring and retrieving the results of a long-running
+            // operation.
+            type PublicIPAddressesDeleteFuture struct {
+            azure.FutureAPI
+            // Result returns the result of the asynchronous operation.
+            // If the operation has not completed it will return an error.
+            Result func(PublicIPAddressesClient) (autorest.Response, error)
+            }
+        // UnmarshalJSON is the custom unmarshaller for CreateFuture.
+        func (future *PublicIPAddressesDeleteFuture) UnmarshalJSON(body []byte) error {
+            var azFuture azure.Future
+            if err := json.Unmarshal(body, &azFuture); err != nil {
+                return err
+            }
+            future.FutureAPI = &azFuture
+            future.Result = future.result
+            return nil
+        }
+        // result is the default implementation for PublicIPAddressesDeleteFuture.Result.
+        func (future *PublicIPAddressesDeleteFuture) result(client PublicIPAddressesClient) (ar autorest.Response, err error) {
+            var done bool
+            done, err = future.DoneWithContext(context.Background(), client)
+            if err != nil {
+                err = autorest.NewErrorWithError(err, "network.PublicIPAddressesDeleteFuture", "Result", future.Response(), "Polling failure")
+                return
+            }
+            if !done {
+                    ar.Response = future.Response()
+                err = azure.NewAsyncOpIncompleteError("network.PublicIPAddressesDeleteFuture")
+                return
+            }
+            ar.Response = future.Response()
+        return
+        }
 
             // Resource common resource representation.
             type Resource struct {
@@ -7629,6 +7927,24 @@ const fqdn = "github.com/Azure/azure-sdk-for-go/services/network/mgmt/2021-03-01
                 return json.Marshal(objectMap)
         }
 
+            // ResourceNavigationLinksListResult response for ResourceNavigationLinks_List operation.
+            type ResourceNavigationLinksListResult struct {
+            autorest.Response `json:"-"`
+            // Value - The resource navigation links in a subnet.
+            Value *[]ResourceNavigationLink `json:"value,omitempty"`
+            // NextLink - READ-ONLY; The URL to get the next set of results.
+            NextLink *string `json:"nextLink,omitempty"`
+            }
+
+        // MarshalJSON is the custom marshaler for ResourceNavigationLinksListResult.
+        func (rnllr ResourceNavigationLinksListResult)MarshalJSON() ([]byte, error){
+        objectMap := make(map[string]interface{})
+                if(rnllr.Value != nil) {
+                objectMap["value"] = rnllr.Value
+                }
+                return json.Marshal(objectMap)
+        }
+
             // ResourceSet the base resource set for visibility and auto-approval.
             type ResourceSet struct {
             // Subscriptions - The list of subscriptions.
@@ -7645,6 +7961,7 @@ const fqdn = "github.com/Azure/azure-sdk-for-go/services/network/mgmt/2021-03-01
 
             // Route route resource.
             type Route struct {
+            autorest.Response `json:"-"`
             // RoutePropertiesFormat - Properties of the route.
             *RoutePropertiesFormat `json:"properties,omitempty"`
             // Name - The name of the resource that is unique within a resource group. This name can be used to access the resource.
@@ -7734,6 +8051,155 @@ const fqdn = "github.com/Azure/azure-sdk-for-go/services/network/mgmt/2021-03-01
         return nil
         }
 
+            // RouteListResult response for the ListRoute API service call.
+            type RouteListResult struct {
+            autorest.Response `json:"-"`
+            // Value - A list of routes in a resource group.
+            Value *[]Route `json:"value,omitempty"`
+            // NextLink - The URL to get the next set of results.
+            NextLink *string `json:"nextLink,omitempty"`
+            }
+
+            // RouteListResultIterator provides access to a complete listing of Route values.
+            type RouteListResultIterator struct {
+                i int
+                page RouteListResultPage
+            }
+        // NextWithContext advances to the next value.  If there was an error making
+        // the request the iterator does not advance and the error is returned.
+        func (iter * RouteListResultIterator) NextWithContext(ctx context.Context) (err error) {
+        if tracing.IsEnabled() {
+        ctx = tracing.StartSpan(ctx, fqdn + "/RouteListResultIterator.NextWithContext")
+        defer func() {
+        sc := -1
+        if iter.Response().Response.Response != nil {
+        sc = iter.Response().Response.Response.StatusCode
+        }
+        tracing.EndSpan(ctx, sc, err)
+        }()
+        }
+        iter.i++
+        if iter.i < len(iter. page.Values()) {
+        return nil
+        }
+        err = iter.page.NextWithContext(ctx)
+        if err != nil {
+        iter. i--
+        return err
+        }
+        iter.i = 0
+        return nil
+        }
+        // Next advances to the next value.  If there was an error making
+        // the request the iterator does not advance and the error is returned.
+        // Deprecated: Use NextWithContext() instead.
+        func (iter * RouteListResultIterator) Next() error {
+        return iter.NextWithContext(context.Background())
+        }
+        // NotDone returns true if the enumeration should be started or is not yet complete.
+        func (iter RouteListResultIterator) NotDone() bool {
+        return iter.page.NotDone() && iter.i < len(iter. page.Values())
+        }
+        // Response returns the raw server response from the last page request.
+        func (iter RouteListResultIterator) Response() RouteListResult {
+        return iter.page.Response()
+        }
+        // Value returns the current value or a zero-initialized value if the
+        // iterator has advanced beyond the end of the collection.
+        func (iter RouteListResultIterator) Value() Route {
+        if !iter.page.NotDone() {
+        return Route{}
+        }
+        return iter.page.Values()[iter.i]
+        }
+        // Creates a new instance of the RouteListResultIterator type.
+        func NewRouteListResultIterator (page RouteListResultPage) RouteListResultIterator {
+        return RouteListResultIterator{page: page}
+        }
+
+
+                // IsEmpty returns true if the ListResult contains no values.
+                func (rlr RouteListResult) IsEmpty() bool {
+                return rlr.Value == nil || len(*rlr.Value) == 0
+                }
+
+                // hasNextLink returns true if the NextLink is not empty.
+                func (rlr RouteListResult) hasNextLink() bool {
+                return rlr.NextLink != nil && len(*rlr.NextLink) != 0
+                }
+                    // routeListResultPreparer prepares a request to retrieve the next set of results.
+                    // It returns nil if no more results exist.
+                    func (rlr RouteListResult) routeListResultPreparer(ctx context.Context) (*http.Request, error) {
+                    if !rlr.hasNextLink() {
+                    return nil, nil
+                    }
+                    return autorest.Prepare((&http.Request{}).WithContext(ctx),
+                    autorest.AsJSON(),
+                    autorest.AsGet(),
+                    autorest.WithBaseURL(to.String( rlr.NextLink)));
+                    }
+
+            // RouteListResultPage contains a page of Route values.
+            type RouteListResultPage struct {
+                fn func(context.Context, RouteListResult) (RouteListResult, error)
+                rlr RouteListResult
+            }
+
+        // NextWithContext advances to the next page of values.  If there was an error making
+        // the request the page does not advance and the error is returned.
+        func (page * RouteListResultPage) NextWithContext(ctx context.Context) (err error) {
+        if tracing.IsEnabled() {
+        ctx = tracing.StartSpan(ctx, fqdn + "/RouteListResultPage.NextWithContext")
+        defer func() {
+        sc := -1
+        if page.Response().Response.Response != nil {
+        sc = page.Response().Response.Response.StatusCode
+        }
+        tracing.EndSpan(ctx, sc, err)
+        }()
+        }
+        for {
+        next, err := page.fn(ctx, page.rlr)
+        if err != nil {
+        return err
+        }
+        page.rlr = next
+        if !next.hasNextLink() || !next.IsEmpty() {
+        break
+        }
+        }
+        return nil
+        }
+
+        // Next advances to the next page of values.  If there was an error making
+        // the request the page does not advance and the error is returned.
+        // Deprecated: Use NextWithContext() instead.
+        func (page * RouteListResultPage) Next() error {
+        return page.NextWithContext(context.Background())
+        }
+        // NotDone returns true if the page enumeration should be started or is not yet complete.
+        func (page RouteListResultPage) NotDone() bool {
+        return !page.rlr.IsEmpty()
+        }
+        // Response returns the raw server response from the last page request.
+        func (page RouteListResultPage) Response() RouteListResult {
+        return page.rlr
+        }
+        // Values returns the slice of values for the current page or nil if there are no values.
+        func (page RouteListResultPage) Values() []Route {
+        if page.rlr.IsEmpty() {
+        return nil
+        }
+        return *page.rlr.Value
+        }
+        // Creates a new instance of the RouteListResultPage type.
+        func NewRouteListResultPage (cur RouteListResult, getNextPage func(context.Context, RouteListResult) (RouteListResult, error)) RouteListResultPage {
+        return RouteListResultPage{
+        fn: getNextPage,
+        rlr: cur,
+        }
+        }
+
             // RoutePropertiesFormat route resource.
             type RoutePropertiesFormat struct {
             // AddressPrefix - The destination CIDR to which the route applies.
@@ -7768,6 +8234,7 @@ const fqdn = "github.com/Azure/azure-sdk-for-go/services/network/mgmt/2021-03-01
 
             // RouteTable route table resource.
             type RouteTable struct {
+            autorest.Response `json:"-"`
             // RouteTablePropertiesFormat - Properties of the route table.
             *RouteTablePropertiesFormat `json:"properties,omitempty"`
             // Etag - READ-ONLY; A unique read-only string that changes whenever the resource is updated.
@@ -7879,6 +8346,155 @@ const fqdn = "github.com/Azure/azure-sdk-for-go/services/network/mgmt/2021-03-01
         return nil
         }
 
+            // RouteTableListResult response for the ListRouteTable API service call.
+            type RouteTableListResult struct {
+            autorest.Response `json:"-"`
+            // Value - A list of route tables in a resource group.
+            Value *[]RouteTable `json:"value,omitempty"`
+            // NextLink - The URL to get the next set of results.
+            NextLink *string `json:"nextLink,omitempty"`
+            }
+
+            // RouteTableListResultIterator provides access to a complete listing of RouteTable values.
+            type RouteTableListResultIterator struct {
+                i int
+                page RouteTableListResultPage
+            }
+        // NextWithContext advances to the next value.  If there was an error making
+        // the request the iterator does not advance and the error is returned.
+        func (iter * RouteTableListResultIterator) NextWithContext(ctx context.Context) (err error) {
+        if tracing.IsEnabled() {
+        ctx = tracing.StartSpan(ctx, fqdn + "/RouteTableListResultIterator.NextWithContext")
+        defer func() {
+        sc := -1
+        if iter.Response().Response.Response != nil {
+        sc = iter.Response().Response.Response.StatusCode
+        }
+        tracing.EndSpan(ctx, sc, err)
+        }()
+        }
+        iter.i++
+        if iter.i < len(iter. page.Values()) {
+        return nil
+        }
+        err = iter.page.NextWithContext(ctx)
+        if err != nil {
+        iter. i--
+        return err
+        }
+        iter.i = 0
+        return nil
+        }
+        // Next advances to the next value.  If there was an error making
+        // the request the iterator does not advance and the error is returned.
+        // Deprecated: Use NextWithContext() instead.
+        func (iter * RouteTableListResultIterator) Next() error {
+        return iter.NextWithContext(context.Background())
+        }
+        // NotDone returns true if the enumeration should be started or is not yet complete.
+        func (iter RouteTableListResultIterator) NotDone() bool {
+        return iter.page.NotDone() && iter.i < len(iter. page.Values())
+        }
+        // Response returns the raw server response from the last page request.
+        func (iter RouteTableListResultIterator) Response() RouteTableListResult {
+        return iter.page.Response()
+        }
+        // Value returns the current value or a zero-initialized value if the
+        // iterator has advanced beyond the end of the collection.
+        func (iter RouteTableListResultIterator) Value() RouteTable {
+        if !iter.page.NotDone() {
+        return RouteTable{}
+        }
+        return iter.page.Values()[iter.i]
+        }
+        // Creates a new instance of the RouteTableListResultIterator type.
+        func NewRouteTableListResultIterator (page RouteTableListResultPage) RouteTableListResultIterator {
+        return RouteTableListResultIterator{page: page}
+        }
+
+
+                // IsEmpty returns true if the ListResult contains no values.
+                func (rtlr RouteTableListResult) IsEmpty() bool {
+                return rtlr.Value == nil || len(*rtlr.Value) == 0
+                }
+
+                // hasNextLink returns true if the NextLink is not empty.
+                func (rtlr RouteTableListResult) hasNextLink() bool {
+                return rtlr.NextLink != nil && len(*rtlr.NextLink) != 0
+                }
+                    // routeTableListResultPreparer prepares a request to retrieve the next set of results.
+                    // It returns nil if no more results exist.
+                    func (rtlr RouteTableListResult) routeTableListResultPreparer(ctx context.Context) (*http.Request, error) {
+                    if !rtlr.hasNextLink() {
+                    return nil, nil
+                    }
+                    return autorest.Prepare((&http.Request{}).WithContext(ctx),
+                    autorest.AsJSON(),
+                    autorest.AsGet(),
+                    autorest.WithBaseURL(to.String( rtlr.NextLink)));
+                    }
+
+            // RouteTableListResultPage contains a page of RouteTable values.
+            type RouteTableListResultPage struct {
+                fn func(context.Context, RouteTableListResult) (RouteTableListResult, error)
+                rtlr RouteTableListResult
+            }
+
+        // NextWithContext advances to the next page of values.  If there was an error making
+        // the request the page does not advance and the error is returned.
+        func (page * RouteTableListResultPage) NextWithContext(ctx context.Context) (err error) {
+        if tracing.IsEnabled() {
+        ctx = tracing.StartSpan(ctx, fqdn + "/RouteTableListResultPage.NextWithContext")
+        defer func() {
+        sc := -1
+        if page.Response().Response.Response != nil {
+        sc = page.Response().Response.Response.StatusCode
+        }
+        tracing.EndSpan(ctx, sc, err)
+        }()
+        }
+        for {
+        next, err := page.fn(ctx, page.rtlr)
+        if err != nil {
+        return err
+        }
+        page.rtlr = next
+        if !next.hasNextLink() || !next.IsEmpty() {
+        break
+        }
+        }
+        return nil
+        }
+
+        // Next advances to the next page of values.  If there was an error making
+        // the request the page does not advance and the error is returned.
+        // Deprecated: Use NextWithContext() instead.
+        func (page * RouteTableListResultPage) Next() error {
+        return page.NextWithContext(context.Background())
+        }
+        // NotDone returns true if the page enumeration should be started or is not yet complete.
+        func (page RouteTableListResultPage) NotDone() bool {
+        return !page.rtlr.IsEmpty()
+        }
+        // Response returns the raw server response from the last page request.
+        func (page RouteTableListResultPage) Response() RouteTableListResult {
+        return page.rtlr
+        }
+        // Values returns the slice of values for the current page or nil if there are no values.
+        func (page RouteTableListResultPage) Values() []RouteTable {
+        if page.rtlr.IsEmpty() {
+        return nil
+        }
+        return *page.rtlr.Value
+        }
+        // Creates a new instance of the RouteTableListResultPage type.
+        func NewRouteTableListResultPage (cur RouteTableListResult, getNextPage func(context.Context, RouteTableListResult) (RouteTableListResult, error)) RouteTableListResultPage {
+        return RouteTableListResultPage{
+        fn: getNextPage,
+        rtlr: cur,
+        }
+        }
+
             // RouteTablePropertiesFormat route Table resource.
             type RouteTablePropertiesFormat struct {
             // Routes - Collection of routes contained within a route table.
@@ -7903,6 +8519,157 @@ const fqdn = "github.com/Azure/azure-sdk-for-go/services/network/mgmt/2021-03-01
                 objectMap["disableBgpRoutePropagation"] = rtpf.DisableBgpRoutePropagation
                 }
                 return json.Marshal(objectMap)
+        }
+
+            // RouteTablesCreateOrUpdateFuture an abstraction for monitoring and retrieving the results of a
+            // long-running operation.
+            type RouteTablesCreateOrUpdateFuture struct {
+            azure.FutureAPI
+            // Result returns the result of the asynchronous operation.
+            // If the operation has not completed it will return an error.
+            Result func(RouteTablesClient) (RouteTable, error)
+            }
+        // UnmarshalJSON is the custom unmarshaller for CreateFuture.
+        func (future *RouteTablesCreateOrUpdateFuture) UnmarshalJSON(body []byte) error {
+            var azFuture azure.Future
+            if err := json.Unmarshal(body, &azFuture); err != nil {
+                return err
+            }
+            future.FutureAPI = &azFuture
+            future.Result = future.result
+            return nil
+        }
+        // result is the default implementation for RouteTablesCreateOrUpdateFuture.Result.
+        func (future *RouteTablesCreateOrUpdateFuture) result(client RouteTablesClient) (rt RouteTable, err error) {
+            var done bool
+            done, err = future.DoneWithContext(context.Background(), client)
+            if err != nil {
+                err = autorest.NewErrorWithError(err, "network.RouteTablesCreateOrUpdateFuture", "Result", future.Response(), "Polling failure")
+                return
+            }
+            if !done {
+                    rt.Response.Response = future.Response()
+                err = azure.NewAsyncOpIncompleteError("network.RouteTablesCreateOrUpdateFuture")
+                return
+            }
+            sender := autorest.DecorateSender(client, autorest.DoRetryForStatusCodes(client.RetryAttempts, client.RetryDuration, autorest.StatusCodesForRetry...))
+            if rt.Response.Response, err = future.GetResult(sender); err == nil && rt.Response.Response.StatusCode != http.StatusNoContent {
+            rt, err = client.CreateOrUpdateResponder(rt.Response.Response)
+            if err != nil {
+            err = autorest.NewErrorWithError(err, "network.RouteTablesCreateOrUpdateFuture", "Result", rt.Response.Response, "Failure responding to request")
+            }
+            }
+            return
+        }
+
+            // RouteTablesDeleteFuture an abstraction for monitoring and retrieving the results of a long-running
+            // operation.
+            type RouteTablesDeleteFuture struct {
+            azure.FutureAPI
+            // Result returns the result of the asynchronous operation.
+            // If the operation has not completed it will return an error.
+            Result func(RouteTablesClient) (autorest.Response, error)
+            }
+        // UnmarshalJSON is the custom unmarshaller for CreateFuture.
+        func (future *RouteTablesDeleteFuture) UnmarshalJSON(body []byte) error {
+            var azFuture azure.Future
+            if err := json.Unmarshal(body, &azFuture); err != nil {
+                return err
+            }
+            future.FutureAPI = &azFuture
+            future.Result = future.result
+            return nil
+        }
+        // result is the default implementation for RouteTablesDeleteFuture.Result.
+        func (future *RouteTablesDeleteFuture) result(client RouteTablesClient) (ar autorest.Response, err error) {
+            var done bool
+            done, err = future.DoneWithContext(context.Background(), client)
+            if err != nil {
+                err = autorest.NewErrorWithError(err, "network.RouteTablesDeleteFuture", "Result", future.Response(), "Polling failure")
+                return
+            }
+            if !done {
+                    ar.Response = future.Response()
+                err = azure.NewAsyncOpIncompleteError("network.RouteTablesDeleteFuture")
+                return
+            }
+            ar.Response = future.Response()
+        return
+        }
+
+            // RoutesCreateOrUpdateFuture an abstraction for monitoring and retrieving the results of a long-running
+            // operation.
+            type RoutesCreateOrUpdateFuture struct {
+            azure.FutureAPI
+            // Result returns the result of the asynchronous operation.
+            // If the operation has not completed it will return an error.
+            Result func(RoutesClient) (Route, error)
+            }
+        // UnmarshalJSON is the custom unmarshaller for CreateFuture.
+        func (future *RoutesCreateOrUpdateFuture) UnmarshalJSON(body []byte) error {
+            var azFuture azure.Future
+            if err := json.Unmarshal(body, &azFuture); err != nil {
+                return err
+            }
+            future.FutureAPI = &azFuture
+            future.Result = future.result
+            return nil
+        }
+        // result is the default implementation for RoutesCreateOrUpdateFuture.Result.
+        func (future *RoutesCreateOrUpdateFuture) result(client RoutesClient) (r Route, err error) {
+            var done bool
+            done, err = future.DoneWithContext(context.Background(), client)
+            if err != nil {
+                err = autorest.NewErrorWithError(err, "network.RoutesCreateOrUpdateFuture", "Result", future.Response(), "Polling failure")
+                return
+            }
+            if !done {
+                    r.Response.Response = future.Response()
+                err = azure.NewAsyncOpIncompleteError("network.RoutesCreateOrUpdateFuture")
+                return
+            }
+            sender := autorest.DecorateSender(client, autorest.DoRetryForStatusCodes(client.RetryAttempts, client.RetryDuration, autorest.StatusCodesForRetry...))
+            if r.Response.Response, err = future.GetResult(sender); err == nil && r.Response.Response.StatusCode != http.StatusNoContent {
+            r, err = client.CreateOrUpdateResponder(r.Response.Response)
+            if err != nil {
+            err = autorest.NewErrorWithError(err, "network.RoutesCreateOrUpdateFuture", "Result", r.Response.Response, "Failure responding to request")
+            }
+            }
+            return
+        }
+
+            // RoutesDeleteFuture an abstraction for monitoring and retrieving the results of a long-running operation.
+            type RoutesDeleteFuture struct {
+            azure.FutureAPI
+            // Result returns the result of the asynchronous operation.
+            // If the operation has not completed it will return an error.
+            Result func(RoutesClient) (autorest.Response, error)
+            }
+        // UnmarshalJSON is the custom unmarshaller for CreateFuture.
+        func (future *RoutesDeleteFuture) UnmarshalJSON(body []byte) error {
+            var azFuture azure.Future
+            if err := json.Unmarshal(body, &azFuture); err != nil {
+                return err
+            }
+            future.FutureAPI = &azFuture
+            future.Result = future.result
+            return nil
+        }
+        // result is the default implementation for RoutesDeleteFuture.Result.
+        func (future *RoutesDeleteFuture) result(client RoutesClient) (ar autorest.Response, err error) {
+            var done bool
+            done, err = future.DoneWithContext(context.Background(), client)
+            if err != nil {
+                err = autorest.NewErrorWithError(err, "network.RoutesDeleteFuture", "Result", future.Response(), "Polling failure")
+                return
+            }
+            if !done {
+                    ar.Response = future.Response()
+                err = azure.NewAsyncOpIncompleteError("network.RoutesDeleteFuture")
+                return
+            }
+            ar.Response = future.Response()
+        return
         }
 
             // SecurityGroup networkSecurityGroup resource.
@@ -8343,6 +9110,24 @@ const fqdn = "github.com/Azure/azure-sdk-for-go/services/network/mgmt/2021-03-01
                 return json.Marshal(objectMap)
         }
 
+            // ServiceAssociationLinksListResult response for ServiceAssociationLinks_List operation.
+            type ServiceAssociationLinksListResult struct {
+            autorest.Response `json:"-"`
+            // Value - The service association links in a subnet.
+            Value *[]ServiceAssociationLink `json:"value,omitempty"`
+            // NextLink - READ-ONLY; The URL to get the next set of results.
+            NextLink *string `json:"nextLink,omitempty"`
+            }
+
+        // MarshalJSON is the custom marshaler for ServiceAssociationLinksListResult.
+        func (sallr ServiceAssociationLinksListResult)MarshalJSON() ([]byte, error){
+        objectMap := make(map[string]interface{})
+                if(sallr.Value != nil) {
+                objectMap["value"] = sallr.Value
+                }
+                return json.Marshal(objectMap)
+        }
+
             // ServiceDelegationPropertiesFormat properties of a service delegation.
             type ServiceDelegationPropertiesFormat struct {
             // ServiceName - The name of the service to whom the subnet should be delegated (e.g. Microsoft.Sql/servers).
@@ -8665,6 +9450,7 @@ const fqdn = "github.com/Azure/azure-sdk-for-go/services/network/mgmt/2021-03-01
 
             // Subnet subnet in a virtual network resource.
             type Subnet struct {
+            autorest.Response `json:"-"`
             // SubnetPropertiesFormat - Properties of the subnet.
             *SubnetPropertiesFormat `json:"properties,omitempty"`
             // Name - The name of the resource that is unique within a resource group. This name can be used to access the resource.
@@ -8754,6 +9540,156 @@ const fqdn = "github.com/Azure/azure-sdk-for-go/services/network/mgmt/2021-03-01
         return nil
         }
 
+            // SubnetListResult response for ListSubnets API service callRetrieves all subnet that belongs to a virtual
+            // network.
+            type SubnetListResult struct {
+            autorest.Response `json:"-"`
+            // Value - The subnets in a virtual network.
+            Value *[]Subnet `json:"value,omitempty"`
+            // NextLink - The URL to get the next set of results.
+            NextLink *string `json:"nextLink,omitempty"`
+            }
+
+            // SubnetListResultIterator provides access to a complete listing of Subnet values.
+            type SubnetListResultIterator struct {
+                i int
+                page SubnetListResultPage
+            }
+        // NextWithContext advances to the next value.  If there was an error making
+        // the request the iterator does not advance and the error is returned.
+        func (iter * SubnetListResultIterator) NextWithContext(ctx context.Context) (err error) {
+        if tracing.IsEnabled() {
+        ctx = tracing.StartSpan(ctx, fqdn + "/SubnetListResultIterator.NextWithContext")
+        defer func() {
+        sc := -1
+        if iter.Response().Response.Response != nil {
+        sc = iter.Response().Response.Response.StatusCode
+        }
+        tracing.EndSpan(ctx, sc, err)
+        }()
+        }
+        iter.i++
+        if iter.i < len(iter. page.Values()) {
+        return nil
+        }
+        err = iter.page.NextWithContext(ctx)
+        if err != nil {
+        iter. i--
+        return err
+        }
+        iter.i = 0
+        return nil
+        }
+        // Next advances to the next value.  If there was an error making
+        // the request the iterator does not advance and the error is returned.
+        // Deprecated: Use NextWithContext() instead.
+        func (iter * SubnetListResultIterator) Next() error {
+        return iter.NextWithContext(context.Background())
+        }
+        // NotDone returns true if the enumeration should be started or is not yet complete.
+        func (iter SubnetListResultIterator) NotDone() bool {
+        return iter.page.NotDone() && iter.i < len(iter. page.Values())
+        }
+        // Response returns the raw server response from the last page request.
+        func (iter SubnetListResultIterator) Response() SubnetListResult {
+        return iter.page.Response()
+        }
+        // Value returns the current value or a zero-initialized value if the
+        // iterator has advanced beyond the end of the collection.
+        func (iter SubnetListResultIterator) Value() Subnet {
+        if !iter.page.NotDone() {
+        return Subnet{}
+        }
+        return iter.page.Values()[iter.i]
+        }
+        // Creates a new instance of the SubnetListResultIterator type.
+        func NewSubnetListResultIterator (page SubnetListResultPage) SubnetListResultIterator {
+        return SubnetListResultIterator{page: page}
+        }
+
+
+                // IsEmpty returns true if the ListResult contains no values.
+                func (slr SubnetListResult) IsEmpty() bool {
+                return slr.Value == nil || len(*slr.Value) == 0
+                }
+
+                // hasNextLink returns true if the NextLink is not empty.
+                func (slr SubnetListResult) hasNextLink() bool {
+                return slr.NextLink != nil && len(*slr.NextLink) != 0
+                }
+                    // subnetListResultPreparer prepares a request to retrieve the next set of results.
+                    // It returns nil if no more results exist.
+                    func (slr SubnetListResult) subnetListResultPreparer(ctx context.Context) (*http.Request, error) {
+                    if !slr.hasNextLink() {
+                    return nil, nil
+                    }
+                    return autorest.Prepare((&http.Request{}).WithContext(ctx),
+                    autorest.AsJSON(),
+                    autorest.AsGet(),
+                    autorest.WithBaseURL(to.String( slr.NextLink)));
+                    }
+
+            // SubnetListResultPage contains a page of Subnet values.
+            type SubnetListResultPage struct {
+                fn func(context.Context, SubnetListResult) (SubnetListResult, error)
+                slr SubnetListResult
+            }
+
+        // NextWithContext advances to the next page of values.  If there was an error making
+        // the request the page does not advance and the error is returned.
+        func (page * SubnetListResultPage) NextWithContext(ctx context.Context) (err error) {
+        if tracing.IsEnabled() {
+        ctx = tracing.StartSpan(ctx, fqdn + "/SubnetListResultPage.NextWithContext")
+        defer func() {
+        sc := -1
+        if page.Response().Response.Response != nil {
+        sc = page.Response().Response.Response.StatusCode
+        }
+        tracing.EndSpan(ctx, sc, err)
+        }()
+        }
+        for {
+        next, err := page.fn(ctx, page.slr)
+        if err != nil {
+        return err
+        }
+        page.slr = next
+        if !next.hasNextLink() || !next.IsEmpty() {
+        break
+        }
+        }
+        return nil
+        }
+
+        // Next advances to the next page of values.  If there was an error making
+        // the request the page does not advance and the error is returned.
+        // Deprecated: Use NextWithContext() instead.
+        func (page * SubnetListResultPage) Next() error {
+        return page.NextWithContext(context.Background())
+        }
+        // NotDone returns true if the page enumeration should be started or is not yet complete.
+        func (page SubnetListResultPage) NotDone() bool {
+        return !page.slr.IsEmpty()
+        }
+        // Response returns the raw server response from the last page request.
+        func (page SubnetListResultPage) Response() SubnetListResult {
+        return page.slr
+        }
+        // Values returns the slice of values for the current page or nil if there are no values.
+        func (page SubnetListResultPage) Values() []Subnet {
+        if page.slr.IsEmpty() {
+        return nil
+        }
+        return *page.slr.Value
+        }
+        // Creates a new instance of the SubnetListResultPage type.
+        func NewSubnetListResultPage (cur SubnetListResult, getNextPage func(context.Context, SubnetListResult) (SubnetListResult, error)) SubnetListResultPage {
+        return SubnetListResultPage{
+        fn: getNextPage,
+        slr: cur,
+        }
+        }
+
             // SubnetPropertiesFormat properties of the subnet.
             type SubnetPropertiesFormat struct {
             // AddressPrefix - The address prefix for the subnet.
@@ -8838,6 +9774,152 @@ const fqdn = "github.com/Azure/azure-sdk-for-go/services/network/mgmt/2021-03-01
                 return json.Marshal(objectMap)
         }
 
+            // SubnetsCreateOrUpdateFuture an abstraction for monitoring and retrieving the results of a long-running
+            // operation.
+            type SubnetsCreateOrUpdateFuture struct {
+            azure.FutureAPI
+            // Result returns the result of the asynchronous operation.
+            // If the operation has not completed it will return an error.
+            Result func(SubnetsClient) (Subnet, error)
+            }
+        // UnmarshalJSON is the custom unmarshaller for CreateFuture.
+        func (future *SubnetsCreateOrUpdateFuture) UnmarshalJSON(body []byte) error {
+            var azFuture azure.Future
+            if err := json.Unmarshal(body, &azFuture); err != nil {
+                return err
+            }
+            future.FutureAPI = &azFuture
+            future.Result = future.result
+            return nil
+        }
+        // result is the default implementation for SubnetsCreateOrUpdateFuture.Result.
+        func (future *SubnetsCreateOrUpdateFuture) result(client SubnetsClient) (s Subnet, err error) {
+            var done bool
+            done, err = future.DoneWithContext(context.Background(), client)
+            if err != nil {
+                err = autorest.NewErrorWithError(err, "network.SubnetsCreateOrUpdateFuture", "Result", future.Response(), "Polling failure")
+                return
+            }
+            if !done {
+                    s.Response.Response = future.Response()
+                err = azure.NewAsyncOpIncompleteError("network.SubnetsCreateOrUpdateFuture")
+                return
+            }
+            sender := autorest.DecorateSender(client, autorest.DoRetryForStatusCodes(client.RetryAttempts, client.RetryDuration, autorest.StatusCodesForRetry...))
+            if s.Response.Response, err = future.GetResult(sender); err == nil && s.Response.Response.StatusCode != http.StatusNoContent {
+            s, err = client.CreateOrUpdateResponder(s.Response.Response)
+            if err != nil {
+            err = autorest.NewErrorWithError(err, "network.SubnetsCreateOrUpdateFuture", "Result", s.Response.Response, "Failure responding to request")
+            }
+            }
+            return
+        }
+
+            // SubnetsDeleteFuture an abstraction for monitoring and retrieving the results of a long-running
+            // operation.
+            type SubnetsDeleteFuture struct {
+            azure.FutureAPI
+            // Result returns the result of the asynchronous operation.
+            // If the operation has not completed it will return an error.
+            Result func(SubnetsClient) (autorest.Response, error)
+            }
+        // UnmarshalJSON is the custom unmarshaller for CreateFuture.
+        func (future *SubnetsDeleteFuture) UnmarshalJSON(body []byte) error {
+            var azFuture azure.Future
+            if err := json.Unmarshal(body, &azFuture); err != nil {
+                return err
+            }
+            future.FutureAPI = &azFuture
+            future.Result = future.result
+            return nil
+        }
+        // result is the default implementation for SubnetsDeleteFuture.Result.
+        func (future *SubnetsDeleteFuture) result(client SubnetsClient) (ar autorest.Response, err error) {
+            var done bool
+            done, err = future.DoneWithContext(context.Background(), client)
+            if err != nil {
+                err = autorest.NewErrorWithError(err, "network.SubnetsDeleteFuture", "Result", future.Response(), "Polling failure")
+                return
+            }
+            if !done {
+                    ar.Response = future.Response()
+                err = azure.NewAsyncOpIncompleteError("network.SubnetsDeleteFuture")
+                return
+            }
+            ar.Response = future.Response()
+        return
+        }
+
+            // SubnetsPrepareNetworkPoliciesFuture an abstraction for monitoring and retrieving the results of a
+            // long-running operation.
+            type SubnetsPrepareNetworkPoliciesFuture struct {
+            azure.FutureAPI
+            // Result returns the result of the asynchronous operation.
+            // If the operation has not completed it will return an error.
+            Result func(SubnetsClient) (autorest.Response, error)
+            }
+        // UnmarshalJSON is the custom unmarshaller for CreateFuture.
+        func (future *SubnetsPrepareNetworkPoliciesFuture) UnmarshalJSON(body []byte) error {
+            var azFuture azure.Future
+            if err := json.Unmarshal(body, &azFuture); err != nil {
+                return err
+            }
+            future.FutureAPI = &azFuture
+            future.Result = future.result
+            return nil
+        }
+        // result is the default implementation for SubnetsPrepareNetworkPoliciesFuture.Result.
+        func (future *SubnetsPrepareNetworkPoliciesFuture) result(client SubnetsClient) (ar autorest.Response, err error) {
+            var done bool
+            done, err = future.DoneWithContext(context.Background(), client)
+            if err != nil {
+                err = autorest.NewErrorWithError(err, "network.SubnetsPrepareNetworkPoliciesFuture", "Result", future.Response(), "Polling failure")
+                return
+            }
+            if !done {
+                    ar.Response = future.Response()
+                err = azure.NewAsyncOpIncompleteError("network.SubnetsPrepareNetworkPoliciesFuture")
+                return
+            }
+            ar.Response = future.Response()
+        return
+        }
+
+            // SubnetsUnprepareNetworkPoliciesFuture an abstraction for monitoring and retrieving the results of a
+            // long-running operation.
+            type SubnetsUnprepareNetworkPoliciesFuture struct {
+            azure.FutureAPI
+            // Result returns the result of the asynchronous operation.
+            // If the operation has not completed it will return an error.
+            Result func(SubnetsClient) (autorest.Response, error)
+            }
+        // UnmarshalJSON is the custom unmarshaller for CreateFuture.
+        func (future *SubnetsUnprepareNetworkPoliciesFuture) UnmarshalJSON(body []byte) error {
+            var azFuture azure.Future
+            if err := json.Unmarshal(body, &azFuture); err != nil {
+                return err
+            }
+            future.FutureAPI = &azFuture
+            future.Result = future.result
+            return nil
+        }
+        // result is the default implementation for SubnetsUnprepareNetworkPoliciesFuture.Result.
+        func (future *SubnetsUnprepareNetworkPoliciesFuture) result(client SubnetsClient) (ar autorest.Response, err error) {
+            var done bool
+            done, err = future.DoneWithContext(context.Background(), client)
+            if err != nil {
+                err = autorest.NewErrorWithError(err, "network.SubnetsUnprepareNetworkPoliciesFuture", "Result", future.Response(), "Polling failure")
+                return
+            }
+            if !done {
+                    ar.Response = future.Response()
+                err = azure.NewAsyncOpIncompleteError("network.SubnetsUnprepareNetworkPoliciesFuture")
+                return
+            }
+            ar.Response = future.Response()
+        return
+        }
+
             // TagsObject tags object for patch operations.
             type TagsObject struct {
             // Tags - Resource tags.
@@ -8872,6 +9954,918 @@ const fqdn = "github.com/Azure/azure-sdk-for-go/services/network/mgmt/2021-03-01
             // NetworkWatcherFlowAnalyticsConfiguration - Parameters that define the configuration of traffic analytics.
             NetworkWatcherFlowAnalyticsConfiguration *TrafficAnalyticsConfigurationProperties `json:"networkWatcherFlowAnalyticsConfiguration,omitempty"`
             }
+
+            // UnprepareNetworkPoliciesRequest details of UnprepareNetworkPolicies for Subnet.
+            type UnprepareNetworkPoliciesRequest struct {
+            // ServiceName - The name of the service for which subnet is being unprepared for.
+            ServiceName *string `json:"serviceName,omitempty"`
+            }
+
+            // VirtualNetwork virtual Network resource.
+            type VirtualNetwork struct {
+            autorest.Response `json:"-"`
+            // ExtendedLocation - The extended location of the virtual network.
+            ExtendedLocation *ExtendedLocation `json:"extendedLocation,omitempty"`
+            // VirtualNetworkPropertiesFormat - Properties of the virtual network.
+            *VirtualNetworkPropertiesFormat `json:"properties,omitempty"`
+            // Etag - READ-ONLY; A unique read-only string that changes whenever the resource is updated.
+            Etag *string `json:"etag,omitempty"`
+            // ID - Resource ID.
+            ID *string `json:"id,omitempty"`
+            // Name - READ-ONLY; Resource name.
+            Name *string `json:"name,omitempty"`
+            // Type - READ-ONLY; Resource type.
+            Type *string `json:"type,omitempty"`
+            // Location - Resource location.
+            Location *string `json:"location,omitempty"`
+            // Tags - Resource tags.
+            Tags map[string]*string `json:"tags"`
+            }
+
+        // MarshalJSON is the custom marshaler for VirtualNetwork.
+        func (vn VirtualNetwork)MarshalJSON() ([]byte, error){
+        objectMap := make(map[string]interface{})
+                if(vn.ExtendedLocation != nil) {
+                objectMap["extendedLocation"] = vn.ExtendedLocation
+                }
+                if(vn.VirtualNetworkPropertiesFormat != nil) {
+                objectMap["properties"] = vn.VirtualNetworkPropertiesFormat
+                }
+                if(vn.ID != nil) {
+                objectMap["id"] = vn.ID
+                }
+                if(vn.Location != nil) {
+                objectMap["location"] = vn.Location
+                }
+                if(vn.Tags != nil) {
+                objectMap["tags"] = vn.Tags
+                }
+                return json.Marshal(objectMap)
+        }
+        // UnmarshalJSON is the custom unmarshaler for VirtualNetwork struct.
+        func (vn *VirtualNetwork) UnmarshalJSON(body []byte) error {
+        var m map[string]*json.RawMessage
+        err := json.Unmarshal(body, &m)
+        if err != nil {
+        return err
+        }
+        for k, v := range  m {
+        switch k {
+                case "extendedLocation":
+    if v != nil {
+        var extendedLocation ExtendedLocation
+        err = json.Unmarshal(*v, &extendedLocation)
+    if err != nil {
+    return err
+    }
+        vn.ExtendedLocation = &extendedLocation
+    }
+                case "properties":
+    if v != nil {
+        var virtualNetworkPropertiesFormat VirtualNetworkPropertiesFormat
+        err = json.Unmarshal(*v, &virtualNetworkPropertiesFormat)
+    if err != nil {
+    return err
+    }
+        vn.VirtualNetworkPropertiesFormat = &virtualNetworkPropertiesFormat
+    }
+                case "etag":
+    if v != nil {
+        var etag string
+        err = json.Unmarshal(*v, &etag)
+    if err != nil {
+    return err
+    }
+        vn.Etag = &etag
+    }
+                case "id":
+    if v != nil {
+        var ID string
+        err = json.Unmarshal(*v, &ID)
+    if err != nil {
+    return err
+    }
+        vn.ID = &ID
+    }
+                case "name":
+    if v != nil {
+        var name string
+        err = json.Unmarshal(*v, &name)
+    if err != nil {
+    return err
+    }
+        vn.Name = &name
+    }
+                case "type":
+    if v != nil {
+        var typeVar string
+        err = json.Unmarshal(*v, &typeVar)
+    if err != nil {
+    return err
+    }
+        vn.Type = &typeVar
+    }
+                case "location":
+    if v != nil {
+        var location string
+        err = json.Unmarshal(*v, &location)
+    if err != nil {
+    return err
+    }
+        vn.Location = &location
+    }
+                case "tags":
+    if v != nil {
+        var tags map[string]*string
+        err = json.Unmarshal(*v, &tags)
+    if err != nil {
+    return err
+    }
+        vn.Tags = tags
+    }
+            }
+        }
+
+        return nil
+        }
+
+            // VirtualNetworkBgpCommunities bgp Communities sent over ExpressRoute with each route corresponding to a
+            // prefix in this VNET.
+            type VirtualNetworkBgpCommunities struct {
+            // VirtualNetworkCommunity - The BGP community associated with the virtual network.
+            VirtualNetworkCommunity *string `json:"virtualNetworkCommunity,omitempty"`
+            // RegionalCommunity - READ-ONLY; The BGP community associated with the region of the virtual network.
+            RegionalCommunity *string `json:"regionalCommunity,omitempty"`
+            }
+
+        // MarshalJSON is the custom marshaler for VirtualNetworkBgpCommunities.
+        func (vnbc VirtualNetworkBgpCommunities)MarshalJSON() ([]byte, error){
+        objectMap := make(map[string]interface{})
+                if(vnbc.VirtualNetworkCommunity != nil) {
+                objectMap["virtualNetworkCommunity"] = vnbc.VirtualNetworkCommunity
+                }
+                return json.Marshal(objectMap)
+        }
+
+            // VirtualNetworkListResult response for the ListVirtualNetworks API service call.
+            type VirtualNetworkListResult struct {
+            autorest.Response `json:"-"`
+            // Value - A list of VirtualNetwork resources in a resource group.
+            Value *[]VirtualNetwork `json:"value,omitempty"`
+            // NextLink - The URL to get the next set of results.
+            NextLink *string `json:"nextLink,omitempty"`
+            }
+
+            // VirtualNetworkListResultIterator provides access to a complete listing of VirtualNetwork values.
+            type VirtualNetworkListResultIterator struct {
+                i int
+                page VirtualNetworkListResultPage
+            }
+        // NextWithContext advances to the next value.  If there was an error making
+        // the request the iterator does not advance and the error is returned.
+        func (iter * VirtualNetworkListResultIterator) NextWithContext(ctx context.Context) (err error) {
+        if tracing.IsEnabled() {
+        ctx = tracing.StartSpan(ctx, fqdn + "/VirtualNetworkListResultIterator.NextWithContext")
+        defer func() {
+        sc := -1
+        if iter.Response().Response.Response != nil {
+        sc = iter.Response().Response.Response.StatusCode
+        }
+        tracing.EndSpan(ctx, sc, err)
+        }()
+        }
+        iter.i++
+        if iter.i < len(iter. page.Values()) {
+        return nil
+        }
+        err = iter.page.NextWithContext(ctx)
+        if err != nil {
+        iter. i--
+        return err
+        }
+        iter.i = 0
+        return nil
+        }
+        // Next advances to the next value.  If there was an error making
+        // the request the iterator does not advance and the error is returned.
+        // Deprecated: Use NextWithContext() instead.
+        func (iter * VirtualNetworkListResultIterator) Next() error {
+        return iter.NextWithContext(context.Background())
+        }
+        // NotDone returns true if the enumeration should be started or is not yet complete.
+        func (iter VirtualNetworkListResultIterator) NotDone() bool {
+        return iter.page.NotDone() && iter.i < len(iter. page.Values())
+        }
+        // Response returns the raw server response from the last page request.
+        func (iter VirtualNetworkListResultIterator) Response() VirtualNetworkListResult {
+        return iter.page.Response()
+        }
+        // Value returns the current value or a zero-initialized value if the
+        // iterator has advanced beyond the end of the collection.
+        func (iter VirtualNetworkListResultIterator) Value() VirtualNetwork {
+        if !iter.page.NotDone() {
+        return VirtualNetwork{}
+        }
+        return iter.page.Values()[iter.i]
+        }
+        // Creates a new instance of the VirtualNetworkListResultIterator type.
+        func NewVirtualNetworkListResultIterator (page VirtualNetworkListResultPage) VirtualNetworkListResultIterator {
+        return VirtualNetworkListResultIterator{page: page}
+        }
+
+
+                // IsEmpty returns true if the ListResult contains no values.
+                func (vnlr VirtualNetworkListResult) IsEmpty() bool {
+                return vnlr.Value == nil || len(*vnlr.Value) == 0
+                }
+
+                // hasNextLink returns true if the NextLink is not empty.
+                func (vnlr VirtualNetworkListResult) hasNextLink() bool {
+                return vnlr.NextLink != nil && len(*vnlr.NextLink) != 0
+                }
+                    // virtualNetworkListResultPreparer prepares a request to retrieve the next set of results.
+                    // It returns nil if no more results exist.
+                    func (vnlr VirtualNetworkListResult) virtualNetworkListResultPreparer(ctx context.Context) (*http.Request, error) {
+                    if !vnlr.hasNextLink() {
+                    return nil, nil
+                    }
+                    return autorest.Prepare((&http.Request{}).WithContext(ctx),
+                    autorest.AsJSON(),
+                    autorest.AsGet(),
+                    autorest.WithBaseURL(to.String( vnlr.NextLink)));
+                    }
+
+            // VirtualNetworkListResultPage contains a page of VirtualNetwork values.
+            type VirtualNetworkListResultPage struct {
+                fn func(context.Context, VirtualNetworkListResult) (VirtualNetworkListResult, error)
+                vnlr VirtualNetworkListResult
+            }
+
+        // NextWithContext advances to the next page of values.  If there was an error making
+        // the request the page does not advance and the error is returned.
+        func (page * VirtualNetworkListResultPage) NextWithContext(ctx context.Context) (err error) {
+        if tracing.IsEnabled() {
+        ctx = tracing.StartSpan(ctx, fqdn + "/VirtualNetworkListResultPage.NextWithContext")
+        defer func() {
+        sc := -1
+        if page.Response().Response.Response != nil {
+        sc = page.Response().Response.Response.StatusCode
+        }
+        tracing.EndSpan(ctx, sc, err)
+        }()
+        }
+        for {
+        next, err := page.fn(ctx, page.vnlr)
+        if err != nil {
+        return err
+        }
+        page.vnlr = next
+        if !next.hasNextLink() || !next.IsEmpty() {
+        break
+        }
+        }
+        return nil
+        }
+
+        // Next advances to the next page of values.  If there was an error making
+        // the request the page does not advance and the error is returned.
+        // Deprecated: Use NextWithContext() instead.
+        func (page * VirtualNetworkListResultPage) Next() error {
+        return page.NextWithContext(context.Background())
+        }
+        // NotDone returns true if the page enumeration should be started or is not yet complete.
+        func (page VirtualNetworkListResultPage) NotDone() bool {
+        return !page.vnlr.IsEmpty()
+        }
+        // Response returns the raw server response from the last page request.
+        func (page VirtualNetworkListResultPage) Response() VirtualNetworkListResult {
+        return page.vnlr
+        }
+        // Values returns the slice of values for the current page or nil if there are no values.
+        func (page VirtualNetworkListResultPage) Values() []VirtualNetwork {
+        if page.vnlr.IsEmpty() {
+        return nil
+        }
+        return *page.vnlr.Value
+        }
+        // Creates a new instance of the VirtualNetworkListResultPage type.
+        func NewVirtualNetworkListResultPage (cur VirtualNetworkListResult, getNextPage func(context.Context, VirtualNetworkListResult) (VirtualNetworkListResult, error)) VirtualNetworkListResultPage {
+        return VirtualNetworkListResultPage{
+        fn: getNextPage,
+        vnlr: cur,
+        }
+        }
+
+            // VirtualNetworkListUsageResult response for the virtual networks GetUsage API service call.
+            type VirtualNetworkListUsageResult struct {
+            autorest.Response `json:"-"`
+            // Value - READ-ONLY; VirtualNetwork usage stats.
+            Value *[]VirtualNetworkUsage `json:"value,omitempty"`
+            // NextLink - The URL to get the next set of results.
+            NextLink *string `json:"nextLink,omitempty"`
+            }
+
+        // MarshalJSON is the custom marshaler for VirtualNetworkListUsageResult.
+        func (vnlur VirtualNetworkListUsageResult)MarshalJSON() ([]byte, error){
+        objectMap := make(map[string]interface{})
+                if(vnlur.NextLink != nil) {
+                objectMap["nextLink"] = vnlur.NextLink
+                }
+                return json.Marshal(objectMap)
+        }
+
+            // VirtualNetworkListUsageResultIterator provides access to a complete listing of VirtualNetworkUsage
+            // values.
+            type VirtualNetworkListUsageResultIterator struct {
+                i int
+                page VirtualNetworkListUsageResultPage
+            }
+        // NextWithContext advances to the next value.  If there was an error making
+        // the request the iterator does not advance and the error is returned.
+        func (iter * VirtualNetworkListUsageResultIterator) NextWithContext(ctx context.Context) (err error) {
+        if tracing.IsEnabled() {
+        ctx = tracing.StartSpan(ctx, fqdn + "/VirtualNetworkListUsageResultIterator.NextWithContext")
+        defer func() {
+        sc := -1
+        if iter.Response().Response.Response != nil {
+        sc = iter.Response().Response.Response.StatusCode
+        }
+        tracing.EndSpan(ctx, sc, err)
+        }()
+        }
+        iter.i++
+        if iter.i < len(iter. page.Values()) {
+        return nil
+        }
+        err = iter.page.NextWithContext(ctx)
+        if err != nil {
+        iter. i--
+        return err
+        }
+        iter.i = 0
+        return nil
+        }
+        // Next advances to the next value.  If there was an error making
+        // the request the iterator does not advance and the error is returned.
+        // Deprecated: Use NextWithContext() instead.
+        func (iter * VirtualNetworkListUsageResultIterator) Next() error {
+        return iter.NextWithContext(context.Background())
+        }
+        // NotDone returns true if the enumeration should be started or is not yet complete.
+        func (iter VirtualNetworkListUsageResultIterator) NotDone() bool {
+        return iter.page.NotDone() && iter.i < len(iter. page.Values())
+        }
+        // Response returns the raw server response from the last page request.
+        func (iter VirtualNetworkListUsageResultIterator) Response() VirtualNetworkListUsageResult {
+        return iter.page.Response()
+        }
+        // Value returns the current value or a zero-initialized value if the
+        // iterator has advanced beyond the end of the collection.
+        func (iter VirtualNetworkListUsageResultIterator) Value() VirtualNetworkUsage {
+        if !iter.page.NotDone() {
+        return VirtualNetworkUsage{}
+        }
+        return iter.page.Values()[iter.i]
+        }
+        // Creates a new instance of the VirtualNetworkListUsageResultIterator type.
+        func NewVirtualNetworkListUsageResultIterator (page VirtualNetworkListUsageResultPage) VirtualNetworkListUsageResultIterator {
+        return VirtualNetworkListUsageResultIterator{page: page}
+        }
+
+
+                // IsEmpty returns true if the ListResult contains no values.
+                func (vnlur VirtualNetworkListUsageResult) IsEmpty() bool {
+                return vnlur.Value == nil || len(*vnlur.Value) == 0
+                }
+
+                // hasNextLink returns true if the NextLink is not empty.
+                func (vnlur VirtualNetworkListUsageResult) hasNextLink() bool {
+                return vnlur.NextLink != nil && len(*vnlur.NextLink) != 0
+                }
+                    // virtualNetworkListUsageResultPreparer prepares a request to retrieve the next set of results.
+                    // It returns nil if no more results exist.
+                    func (vnlur VirtualNetworkListUsageResult) virtualNetworkListUsageResultPreparer(ctx context.Context) (*http.Request, error) {
+                    if !vnlur.hasNextLink() {
+                    return nil, nil
+                    }
+                    return autorest.Prepare((&http.Request{}).WithContext(ctx),
+                    autorest.AsJSON(),
+                    autorest.AsGet(),
+                    autorest.WithBaseURL(to.String( vnlur.NextLink)));
+                    }
+
+            // VirtualNetworkListUsageResultPage contains a page of VirtualNetworkUsage values.
+            type VirtualNetworkListUsageResultPage struct {
+                fn func(context.Context, VirtualNetworkListUsageResult) (VirtualNetworkListUsageResult, error)
+                vnlur VirtualNetworkListUsageResult
+            }
+
+        // NextWithContext advances to the next page of values.  If there was an error making
+        // the request the page does not advance and the error is returned.
+        func (page * VirtualNetworkListUsageResultPage) NextWithContext(ctx context.Context) (err error) {
+        if tracing.IsEnabled() {
+        ctx = tracing.StartSpan(ctx, fqdn + "/VirtualNetworkListUsageResultPage.NextWithContext")
+        defer func() {
+        sc := -1
+        if page.Response().Response.Response != nil {
+        sc = page.Response().Response.Response.StatusCode
+        }
+        tracing.EndSpan(ctx, sc, err)
+        }()
+        }
+        for {
+        next, err := page.fn(ctx, page.vnlur)
+        if err != nil {
+        return err
+        }
+        page.vnlur = next
+        if !next.hasNextLink() || !next.IsEmpty() {
+        break
+        }
+        }
+        return nil
+        }
+
+        // Next advances to the next page of values.  If there was an error making
+        // the request the page does not advance and the error is returned.
+        // Deprecated: Use NextWithContext() instead.
+        func (page * VirtualNetworkListUsageResultPage) Next() error {
+        return page.NextWithContext(context.Background())
+        }
+        // NotDone returns true if the page enumeration should be started or is not yet complete.
+        func (page VirtualNetworkListUsageResultPage) NotDone() bool {
+        return !page.vnlur.IsEmpty()
+        }
+        // Response returns the raw server response from the last page request.
+        func (page VirtualNetworkListUsageResultPage) Response() VirtualNetworkListUsageResult {
+        return page.vnlur
+        }
+        // Values returns the slice of values for the current page or nil if there are no values.
+        func (page VirtualNetworkListUsageResultPage) Values() []VirtualNetworkUsage {
+        if page.vnlur.IsEmpty() {
+        return nil
+        }
+        return *page.vnlur.Value
+        }
+        // Creates a new instance of the VirtualNetworkListUsageResultPage type.
+        func NewVirtualNetworkListUsageResultPage (cur VirtualNetworkListUsageResult, getNextPage func(context.Context, VirtualNetworkListUsageResult) (VirtualNetworkListUsageResult, error)) VirtualNetworkListUsageResultPage {
+        return VirtualNetworkListUsageResultPage{
+        fn: getNextPage,
+        vnlur: cur,
+        }
+        }
+
+            // VirtualNetworkPeering peerings in a virtual network resource.
+            type VirtualNetworkPeering struct {
+            autorest.Response `json:"-"`
+            // VirtualNetworkPeeringPropertiesFormat - Properties of the virtual network peering.
+            *VirtualNetworkPeeringPropertiesFormat `json:"properties,omitempty"`
+            // Name - The name of the resource that is unique within a resource group. This name can be used to access the resource.
+            Name *string `json:"name,omitempty"`
+            // Etag - READ-ONLY; A unique read-only string that changes whenever the resource is updated.
+            Etag *string `json:"etag,omitempty"`
+            // Type - Resource type.
+            Type *string `json:"type,omitempty"`
+            // ID - Resource ID.
+            ID *string `json:"id,omitempty"`
+            }
+
+        // MarshalJSON is the custom marshaler for VirtualNetworkPeering.
+        func (vnp VirtualNetworkPeering)MarshalJSON() ([]byte, error){
+        objectMap := make(map[string]interface{})
+                if(vnp.VirtualNetworkPeeringPropertiesFormat != nil) {
+                objectMap["properties"] = vnp.VirtualNetworkPeeringPropertiesFormat
+                }
+                if(vnp.Name != nil) {
+                objectMap["name"] = vnp.Name
+                }
+                if(vnp.Type != nil) {
+                objectMap["type"] = vnp.Type
+                }
+                if(vnp.ID != nil) {
+                objectMap["id"] = vnp.ID
+                }
+                return json.Marshal(objectMap)
+        }
+        // UnmarshalJSON is the custom unmarshaler for VirtualNetworkPeering struct.
+        func (vnp *VirtualNetworkPeering) UnmarshalJSON(body []byte) error {
+        var m map[string]*json.RawMessage
+        err := json.Unmarshal(body, &m)
+        if err != nil {
+        return err
+        }
+        for k, v := range  m {
+        switch k {
+                case "properties":
+    if v != nil {
+        var virtualNetworkPeeringPropertiesFormat VirtualNetworkPeeringPropertiesFormat
+        err = json.Unmarshal(*v, &virtualNetworkPeeringPropertiesFormat)
+    if err != nil {
+    return err
+    }
+        vnp.VirtualNetworkPeeringPropertiesFormat = &virtualNetworkPeeringPropertiesFormat
+    }
+                case "name":
+    if v != nil {
+        var name string
+        err = json.Unmarshal(*v, &name)
+    if err != nil {
+    return err
+    }
+        vnp.Name = &name
+    }
+                case "etag":
+    if v != nil {
+        var etag string
+        err = json.Unmarshal(*v, &etag)
+    if err != nil {
+    return err
+    }
+        vnp.Etag = &etag
+    }
+                case "type":
+    if v != nil {
+        var typeVar string
+        err = json.Unmarshal(*v, &typeVar)
+    if err != nil {
+    return err
+    }
+        vnp.Type = &typeVar
+    }
+                case "id":
+    if v != nil {
+        var ID string
+        err = json.Unmarshal(*v, &ID)
+    if err != nil {
+    return err
+    }
+        vnp.ID = &ID
+    }
+            }
+        }
+
+        return nil
+        }
+
+            // VirtualNetworkPeeringListResult response for ListSubnets API service call. Retrieves all subnets that
+            // belong to a virtual network.
+            type VirtualNetworkPeeringListResult struct {
+            autorest.Response `json:"-"`
+            // Value - The peerings in a virtual network.
+            Value *[]VirtualNetworkPeering `json:"value,omitempty"`
+            // NextLink - The URL to get the next set of results.
+            NextLink *string `json:"nextLink,omitempty"`
+            }
+
+            // VirtualNetworkPeeringListResultIterator provides access to a complete listing of VirtualNetworkPeering
+            // values.
+            type VirtualNetworkPeeringListResultIterator struct {
+                i int
+                page VirtualNetworkPeeringListResultPage
+            }
+        // NextWithContext advances to the next value.  If there was an error making
+        // the request the iterator does not advance and the error is returned.
+        func (iter * VirtualNetworkPeeringListResultIterator) NextWithContext(ctx context.Context) (err error) {
+        if tracing.IsEnabled() {
+        ctx = tracing.StartSpan(ctx, fqdn + "/VirtualNetworkPeeringListResultIterator.NextWithContext")
+        defer func() {
+        sc := -1
+        if iter.Response().Response.Response != nil {
+        sc = iter.Response().Response.Response.StatusCode
+        }
+        tracing.EndSpan(ctx, sc, err)
+        }()
+        }
+        iter.i++
+        if iter.i < len(iter. page.Values()) {
+        return nil
+        }
+        err = iter.page.NextWithContext(ctx)
+        if err != nil {
+        iter. i--
+        return err
+        }
+        iter.i = 0
+        return nil
+        }
+        // Next advances to the next value.  If there was an error making
+        // the request the iterator does not advance and the error is returned.
+        // Deprecated: Use NextWithContext() instead.
+        func (iter * VirtualNetworkPeeringListResultIterator) Next() error {
+        return iter.NextWithContext(context.Background())
+        }
+        // NotDone returns true if the enumeration should be started or is not yet complete.
+        func (iter VirtualNetworkPeeringListResultIterator) NotDone() bool {
+        return iter.page.NotDone() && iter.i < len(iter. page.Values())
+        }
+        // Response returns the raw server response from the last page request.
+        func (iter VirtualNetworkPeeringListResultIterator) Response() VirtualNetworkPeeringListResult {
+        return iter.page.Response()
+        }
+        // Value returns the current value or a zero-initialized value if the
+        // iterator has advanced beyond the end of the collection.
+        func (iter VirtualNetworkPeeringListResultIterator) Value() VirtualNetworkPeering {
+        if !iter.page.NotDone() {
+        return VirtualNetworkPeering{}
+        }
+        return iter.page.Values()[iter.i]
+        }
+        // Creates a new instance of the VirtualNetworkPeeringListResultIterator type.
+        func NewVirtualNetworkPeeringListResultIterator (page VirtualNetworkPeeringListResultPage) VirtualNetworkPeeringListResultIterator {
+        return VirtualNetworkPeeringListResultIterator{page: page}
+        }
+
+
+                // IsEmpty returns true if the ListResult contains no values.
+                func (vnplr VirtualNetworkPeeringListResult) IsEmpty() bool {
+                return vnplr.Value == nil || len(*vnplr.Value) == 0
+                }
+
+                // hasNextLink returns true if the NextLink is not empty.
+                func (vnplr VirtualNetworkPeeringListResult) hasNextLink() bool {
+                return vnplr.NextLink != nil && len(*vnplr.NextLink) != 0
+                }
+                    // virtualNetworkPeeringListResultPreparer prepares a request to retrieve the next set of results.
+                    // It returns nil if no more results exist.
+                    func (vnplr VirtualNetworkPeeringListResult) virtualNetworkPeeringListResultPreparer(ctx context.Context) (*http.Request, error) {
+                    if !vnplr.hasNextLink() {
+                    return nil, nil
+                    }
+                    return autorest.Prepare((&http.Request{}).WithContext(ctx),
+                    autorest.AsJSON(),
+                    autorest.AsGet(),
+                    autorest.WithBaseURL(to.String( vnplr.NextLink)));
+                    }
+
+            // VirtualNetworkPeeringListResultPage contains a page of VirtualNetworkPeering values.
+            type VirtualNetworkPeeringListResultPage struct {
+                fn func(context.Context, VirtualNetworkPeeringListResult) (VirtualNetworkPeeringListResult, error)
+                vnplr VirtualNetworkPeeringListResult
+            }
+
+        // NextWithContext advances to the next page of values.  If there was an error making
+        // the request the page does not advance and the error is returned.
+        func (page * VirtualNetworkPeeringListResultPage) NextWithContext(ctx context.Context) (err error) {
+        if tracing.IsEnabled() {
+        ctx = tracing.StartSpan(ctx, fqdn + "/VirtualNetworkPeeringListResultPage.NextWithContext")
+        defer func() {
+        sc := -1
+        if page.Response().Response.Response != nil {
+        sc = page.Response().Response.Response.StatusCode
+        }
+        tracing.EndSpan(ctx, sc, err)
+        }()
+        }
+        for {
+        next, err := page.fn(ctx, page.vnplr)
+        if err != nil {
+        return err
+        }
+        page.vnplr = next
+        if !next.hasNextLink() || !next.IsEmpty() {
+        break
+        }
+        }
+        return nil
+        }
+
+        // Next advances to the next page of values.  If there was an error making
+        // the request the page does not advance and the error is returned.
+        // Deprecated: Use NextWithContext() instead.
+        func (page * VirtualNetworkPeeringListResultPage) Next() error {
+        return page.NextWithContext(context.Background())
+        }
+        // NotDone returns true if the page enumeration should be started or is not yet complete.
+        func (page VirtualNetworkPeeringListResultPage) NotDone() bool {
+        return !page.vnplr.IsEmpty()
+        }
+        // Response returns the raw server response from the last page request.
+        func (page VirtualNetworkPeeringListResultPage) Response() VirtualNetworkPeeringListResult {
+        return page.vnplr
+        }
+        // Values returns the slice of values for the current page or nil if there are no values.
+        func (page VirtualNetworkPeeringListResultPage) Values() []VirtualNetworkPeering {
+        if page.vnplr.IsEmpty() {
+        return nil
+        }
+        return *page.vnplr.Value
+        }
+        // Creates a new instance of the VirtualNetworkPeeringListResultPage type.
+        func NewVirtualNetworkPeeringListResultPage (cur VirtualNetworkPeeringListResult, getNextPage func(context.Context, VirtualNetworkPeeringListResult) (VirtualNetworkPeeringListResult, error)) VirtualNetworkPeeringListResultPage {
+        return VirtualNetworkPeeringListResultPage{
+        fn: getNextPage,
+        vnplr: cur,
+        }
+        }
+
+            // VirtualNetworkPeeringPropertiesFormat properties of the virtual network peering.
+            type VirtualNetworkPeeringPropertiesFormat struct {
+            // AllowVirtualNetworkAccess - Whether the VMs in the local virtual network space would be able to access the VMs in remote virtual network space.
+            AllowVirtualNetworkAccess *bool `json:"allowVirtualNetworkAccess,omitempty"`
+            // AllowForwardedTraffic - Whether the forwarded traffic from the VMs in the local virtual network will be allowed/disallowed in remote virtual network.
+            AllowForwardedTraffic *bool `json:"allowForwardedTraffic,omitempty"`
+            // AllowGatewayTransit - If gateway links can be used in remote virtual networking to link to this virtual network.
+            AllowGatewayTransit *bool `json:"allowGatewayTransit,omitempty"`
+            // UseRemoteGateways - If remote gateways can be used on this virtual network. If the flag is set to true, and allowGatewayTransit on remote peering is also true, virtual network will use gateways of remote virtual network for transit. Only one peering can have this flag set to true. This flag cannot be set if virtual network already has a gateway.
+            UseRemoteGateways *bool `json:"useRemoteGateways,omitempty"`
+            // RemoteVirtualNetwork - The reference to the remote virtual network. The remote virtual network can be in the same or different region (preview). See here to register for the preview and learn more (https://docs.microsoft.com/en-us/azure/virtual-network/virtual-network-create-peering).
+            RemoteVirtualNetwork *SubResource `json:"remoteVirtualNetwork,omitempty"`
+            // RemoteAddressSpace - The reference to the address space peered with the remote virtual network.
+            RemoteAddressSpace *AddressSpace `json:"remoteAddressSpace,omitempty"`
+            // RemoteVirtualNetworkAddressSpace - The reference to the current address space of the remote virtual network.
+            RemoteVirtualNetworkAddressSpace *AddressSpace `json:"remoteVirtualNetworkAddressSpace,omitempty"`
+            // RemoteBgpCommunities - The reference to the remote virtual network's Bgp Communities.
+            RemoteBgpCommunities *VirtualNetworkBgpCommunities `json:"remoteBgpCommunities,omitempty"`
+            // PeeringState - The status of the virtual network peering. Possible values include: 'Initiated', 'Connected', 'Disconnected'
+            PeeringState VirtualNetworkPeeringState `json:"peeringState,omitempty"`
+            // PeeringSyncLevel - The peering sync status of the virtual network peering. Possible values include: 'FullyInSync', 'RemoteNotInSync', 'LocalNotInSync', 'LocalAndRemoteNotInSync'
+            PeeringSyncLevel VirtualNetworkPeeringLevel `json:"peeringSyncLevel,omitempty"`
+            // ProvisioningState - READ-ONLY; The provisioning state of the virtual network peering resource. Possible values include: 'Succeeded', 'Updating', 'Deleting', 'Failed'
+            ProvisioningState ProvisioningState `json:"provisioningState,omitempty"`
+            // DoNotVerifyRemoteGateways - If we need to verify the provisioning state of the remote gateway.
+            DoNotVerifyRemoteGateways *bool `json:"doNotVerifyRemoteGateways,omitempty"`
+            // ResourceGUID - READ-ONLY; The resourceGuid property of the Virtual Network peering resource.
+            ResourceGUID *string `json:"resourceGuid,omitempty"`
+            }
+
+        // MarshalJSON is the custom marshaler for VirtualNetworkPeeringPropertiesFormat.
+        func (vnppf VirtualNetworkPeeringPropertiesFormat)MarshalJSON() ([]byte, error){
+        objectMap := make(map[string]interface{})
+                if(vnppf.AllowVirtualNetworkAccess != nil) {
+                objectMap["allowVirtualNetworkAccess"] = vnppf.AllowVirtualNetworkAccess
+                }
+                if(vnppf.AllowForwardedTraffic != nil) {
+                objectMap["allowForwardedTraffic"] = vnppf.AllowForwardedTraffic
+                }
+                if(vnppf.AllowGatewayTransit != nil) {
+                objectMap["allowGatewayTransit"] = vnppf.AllowGatewayTransit
+                }
+                if(vnppf.UseRemoteGateways != nil) {
+                objectMap["useRemoteGateways"] = vnppf.UseRemoteGateways
+                }
+                if(vnppf.RemoteVirtualNetwork != nil) {
+                objectMap["remoteVirtualNetwork"] = vnppf.RemoteVirtualNetwork
+                }
+                if(vnppf.RemoteAddressSpace != nil) {
+                objectMap["remoteAddressSpace"] = vnppf.RemoteAddressSpace
+                }
+                if(vnppf.RemoteVirtualNetworkAddressSpace != nil) {
+                objectMap["remoteVirtualNetworkAddressSpace"] = vnppf.RemoteVirtualNetworkAddressSpace
+                }
+                if(vnppf.RemoteBgpCommunities != nil) {
+                objectMap["remoteBgpCommunities"] = vnppf.RemoteBgpCommunities
+                }
+                if(vnppf.PeeringState != "") {
+                objectMap["peeringState"] = vnppf.PeeringState
+                }
+                if(vnppf.PeeringSyncLevel != "") {
+                objectMap["peeringSyncLevel"] = vnppf.PeeringSyncLevel
+                }
+                if(vnppf.DoNotVerifyRemoteGateways != nil) {
+                objectMap["doNotVerifyRemoteGateways"] = vnppf.DoNotVerifyRemoteGateways
+                }
+                return json.Marshal(objectMap)
+        }
+
+            // VirtualNetworkPeeringsCreateOrUpdateFuture an abstraction for monitoring and retrieving the results of a
+            // long-running operation.
+            type VirtualNetworkPeeringsCreateOrUpdateFuture struct {
+            azure.FutureAPI
+            // Result returns the result of the asynchronous operation.
+            // If the operation has not completed it will return an error.
+            Result func(VirtualNetworkPeeringsClient) (VirtualNetworkPeering, error)
+            }
+        // UnmarshalJSON is the custom unmarshaller for CreateFuture.
+        func (future *VirtualNetworkPeeringsCreateOrUpdateFuture) UnmarshalJSON(body []byte) error {
+            var azFuture azure.Future
+            if err := json.Unmarshal(body, &azFuture); err != nil {
+                return err
+            }
+            future.FutureAPI = &azFuture
+            future.Result = future.result
+            return nil
+        }
+        // result is the default implementation for VirtualNetworkPeeringsCreateOrUpdateFuture.Result.
+        func (future *VirtualNetworkPeeringsCreateOrUpdateFuture) result(client VirtualNetworkPeeringsClient) (vnp VirtualNetworkPeering, err error) {
+            var done bool
+            done, err = future.DoneWithContext(context.Background(), client)
+            if err != nil {
+                err = autorest.NewErrorWithError(err, "network.VirtualNetworkPeeringsCreateOrUpdateFuture", "Result", future.Response(), "Polling failure")
+                return
+            }
+            if !done {
+                    vnp.Response.Response = future.Response()
+                err = azure.NewAsyncOpIncompleteError("network.VirtualNetworkPeeringsCreateOrUpdateFuture")
+                return
+            }
+            sender := autorest.DecorateSender(client, autorest.DoRetryForStatusCodes(client.RetryAttempts, client.RetryDuration, autorest.StatusCodesForRetry...))
+            if vnp.Response.Response, err = future.GetResult(sender); err == nil && vnp.Response.Response.StatusCode != http.StatusNoContent {
+            vnp, err = client.CreateOrUpdateResponder(vnp.Response.Response)
+            if err != nil {
+            err = autorest.NewErrorWithError(err, "network.VirtualNetworkPeeringsCreateOrUpdateFuture", "Result", vnp.Response.Response, "Failure responding to request")
+            }
+            }
+            return
+        }
+
+            // VirtualNetworkPeeringsDeleteFuture an abstraction for monitoring and retrieving the results of a
+            // long-running operation.
+            type VirtualNetworkPeeringsDeleteFuture struct {
+            azure.FutureAPI
+            // Result returns the result of the asynchronous operation.
+            // If the operation has not completed it will return an error.
+            Result func(VirtualNetworkPeeringsClient) (autorest.Response, error)
+            }
+        // UnmarshalJSON is the custom unmarshaller for CreateFuture.
+        func (future *VirtualNetworkPeeringsDeleteFuture) UnmarshalJSON(body []byte) error {
+            var azFuture azure.Future
+            if err := json.Unmarshal(body, &azFuture); err != nil {
+                return err
+            }
+            future.FutureAPI = &azFuture
+            future.Result = future.result
+            return nil
+        }
+        // result is the default implementation for VirtualNetworkPeeringsDeleteFuture.Result.
+        func (future *VirtualNetworkPeeringsDeleteFuture) result(client VirtualNetworkPeeringsClient) (ar autorest.Response, err error) {
+            var done bool
+            done, err = future.DoneWithContext(context.Background(), client)
+            if err != nil {
+                err = autorest.NewErrorWithError(err, "network.VirtualNetworkPeeringsDeleteFuture", "Result", future.Response(), "Polling failure")
+                return
+            }
+            if !done {
+                    ar.Response = future.Response()
+                err = azure.NewAsyncOpIncompleteError("network.VirtualNetworkPeeringsDeleteFuture")
+                return
+            }
+            ar.Response = future.Response()
+        return
+        }
+
+            // VirtualNetworkPropertiesFormat properties of the virtual network.
+            type VirtualNetworkPropertiesFormat struct {
+            // AddressSpace - The AddressSpace that contains an array of IP address ranges that can be used by subnets.
+            AddressSpace *AddressSpace `json:"addressSpace,omitempty"`
+            // DhcpOptions - The dhcpOptions that contains an array of DNS servers available to VMs deployed in the virtual network.
+            DhcpOptions *DhcpOptions `json:"dhcpOptions,omitempty"`
+            // FlowTimeoutInMinutes - The FlowTimeout value (in minutes) for the Virtual Network
+            FlowTimeoutInMinutes *int32 `json:"flowTimeoutInMinutes,omitempty"`
+            // Subnets - A list of subnets in a Virtual Network.
+            Subnets *[]Subnet `json:"subnets,omitempty"`
+            // VirtualNetworkPeerings - A list of peerings in a Virtual Network.
+            VirtualNetworkPeerings *[]VirtualNetworkPeering `json:"virtualNetworkPeerings,omitempty"`
+            // ResourceGUID - READ-ONLY; The resourceGuid property of the Virtual Network resource.
+            ResourceGUID *string `json:"resourceGuid,omitempty"`
+            // ProvisioningState - READ-ONLY; The provisioning state of the virtual network resource. Possible values include: 'Succeeded', 'Updating', 'Deleting', 'Failed'
+            ProvisioningState ProvisioningState `json:"provisioningState,omitempty"`
+            // EnableDdosProtection - Indicates if DDoS protection is enabled for all the protected resources in the virtual network. It requires a DDoS protection plan associated with the resource.
+            EnableDdosProtection *bool `json:"enableDdosProtection,omitempty"`
+            // EnableVMProtection - Indicates if VM protection is enabled for all the subnets in the virtual network.
+            EnableVMProtection *bool `json:"enableVmProtection,omitempty"`
+            // DdosProtectionPlan - The DDoS protection plan associated with the virtual network.
+            DdosProtectionPlan *SubResource `json:"ddosProtectionPlan,omitempty"`
+            // BgpCommunities - Bgp Communities sent over ExpressRoute with each route corresponding to a prefix in this VNET.
+            BgpCommunities *VirtualNetworkBgpCommunities `json:"bgpCommunities,omitempty"`
+            // IPAllocations - Array of IpAllocation which reference this VNET.
+            IPAllocations *[]SubResource `json:"ipAllocations,omitempty"`
+            }
+
+        // MarshalJSON is the custom marshaler for VirtualNetworkPropertiesFormat.
+        func (vnpf VirtualNetworkPropertiesFormat)MarshalJSON() ([]byte, error){
+        objectMap := make(map[string]interface{})
+                if(vnpf.AddressSpace != nil) {
+                objectMap["addressSpace"] = vnpf.AddressSpace
+                }
+                if(vnpf.DhcpOptions != nil) {
+                objectMap["dhcpOptions"] = vnpf.DhcpOptions
+                }
+                if(vnpf.FlowTimeoutInMinutes != nil) {
+                objectMap["flowTimeoutInMinutes"] = vnpf.FlowTimeoutInMinutes
+                }
+                if(vnpf.Subnets != nil) {
+                objectMap["subnets"] = vnpf.Subnets
+                }
+                if(vnpf.VirtualNetworkPeerings != nil) {
+                objectMap["virtualNetworkPeerings"] = vnpf.VirtualNetworkPeerings
+                }
+                if(vnpf.EnableDdosProtection != nil) {
+                objectMap["enableDdosProtection"] = vnpf.EnableDdosProtection
+                }
+                if(vnpf.EnableVMProtection != nil) {
+                objectMap["enableVmProtection"] = vnpf.EnableVMProtection
+                }
+                if(vnpf.DdosProtectionPlan != nil) {
+                objectMap["ddosProtectionPlan"] = vnpf.DdosProtectionPlan
+                }
+                if(vnpf.BgpCommunities != nil) {
+                objectMap["bgpCommunities"] = vnpf.BgpCommunities
+                }
+                if(vnpf.IPAllocations != nil) {
+                objectMap["ipAllocations"] = vnpf.IPAllocations
+                }
+                return json.Marshal(objectMap)
+        }
 
             // VirtualNetworkTap virtual Network Tap resource.
             type VirtualNetworkTap struct {
@@ -9015,5 +11009,115 @@ const fqdn = "github.com/Azure/azure-sdk-for-go/services/network/mgmt/2021-03-01
                 objectMap["destinationPort"] = vntpf.DestinationPort
                 }
                 return json.Marshal(objectMap)
+        }
+
+            // VirtualNetworkUsage usage details for subnet.
+            type VirtualNetworkUsage struct {
+            // CurrentValue - READ-ONLY; Indicates number of IPs used from the Subnet.
+            CurrentValue *float64 `json:"currentValue,omitempty"`
+            // ID - READ-ONLY; Subnet identifier.
+            ID *string `json:"id,omitempty"`
+            // Limit - READ-ONLY; Indicates the size of the subnet.
+            Limit *float64 `json:"limit,omitempty"`
+            // Name - READ-ONLY; The name containing common and localized value for usage.
+            Name *VirtualNetworkUsageName `json:"name,omitempty"`
+            // Unit - READ-ONLY; Usage units. Returns 'Count'.
+            Unit *string `json:"unit,omitempty"`
+            }
+
+        // MarshalJSON is the custom marshaler for VirtualNetworkUsage.
+        func (vnu VirtualNetworkUsage)MarshalJSON() ([]byte, error){
+        objectMap := make(map[string]interface{})
+                return json.Marshal(objectMap)
+        }
+
+            // VirtualNetworkUsageName usage strings container.
+            type VirtualNetworkUsageName struct {
+            // LocalizedValue - READ-ONLY; Localized subnet size and usage string.
+            LocalizedValue *string `json:"localizedValue,omitempty"`
+            // Value - READ-ONLY; Subnet size and usage string.
+            Value *string `json:"value,omitempty"`
+            }
+
+        // MarshalJSON is the custom marshaler for VirtualNetworkUsageName.
+        func (vnun VirtualNetworkUsageName)MarshalJSON() ([]byte, error){
+        objectMap := make(map[string]interface{})
+                return json.Marshal(objectMap)
+        }
+
+            // VirtualNetworksCreateOrUpdateFuture an abstraction for monitoring and retrieving the results of a
+            // long-running operation.
+            type VirtualNetworksCreateOrUpdateFuture struct {
+            azure.FutureAPI
+            // Result returns the result of the asynchronous operation.
+            // If the operation has not completed it will return an error.
+            Result func(VirtualNetworksClient) (VirtualNetwork, error)
+            }
+        // UnmarshalJSON is the custom unmarshaller for CreateFuture.
+        func (future *VirtualNetworksCreateOrUpdateFuture) UnmarshalJSON(body []byte) error {
+            var azFuture azure.Future
+            if err := json.Unmarshal(body, &azFuture); err != nil {
+                return err
+            }
+            future.FutureAPI = &azFuture
+            future.Result = future.result
+            return nil
+        }
+        // result is the default implementation for VirtualNetworksCreateOrUpdateFuture.Result.
+        func (future *VirtualNetworksCreateOrUpdateFuture) result(client VirtualNetworksClient) (vn VirtualNetwork, err error) {
+            var done bool
+            done, err = future.DoneWithContext(context.Background(), client)
+            if err != nil {
+                err = autorest.NewErrorWithError(err, "network.VirtualNetworksCreateOrUpdateFuture", "Result", future.Response(), "Polling failure")
+                return
+            }
+            if !done {
+                    vn.Response.Response = future.Response()
+                err = azure.NewAsyncOpIncompleteError("network.VirtualNetworksCreateOrUpdateFuture")
+                return
+            }
+            sender := autorest.DecorateSender(client, autorest.DoRetryForStatusCodes(client.RetryAttempts, client.RetryDuration, autorest.StatusCodesForRetry...))
+            if vn.Response.Response, err = future.GetResult(sender); err == nil && vn.Response.Response.StatusCode != http.StatusNoContent {
+            vn, err = client.CreateOrUpdateResponder(vn.Response.Response)
+            if err != nil {
+            err = autorest.NewErrorWithError(err, "network.VirtualNetworksCreateOrUpdateFuture", "Result", vn.Response.Response, "Failure responding to request")
+            }
+            }
+            return
+        }
+
+            // VirtualNetworksDeleteFuture an abstraction for monitoring and retrieving the results of a long-running
+            // operation.
+            type VirtualNetworksDeleteFuture struct {
+            azure.FutureAPI
+            // Result returns the result of the asynchronous operation.
+            // If the operation has not completed it will return an error.
+            Result func(VirtualNetworksClient) (autorest.Response, error)
+            }
+        // UnmarshalJSON is the custom unmarshaller for CreateFuture.
+        func (future *VirtualNetworksDeleteFuture) UnmarshalJSON(body []byte) error {
+            var azFuture azure.Future
+            if err := json.Unmarshal(body, &azFuture); err != nil {
+                return err
+            }
+            future.FutureAPI = &azFuture
+            future.Result = future.result
+            return nil
+        }
+        // result is the default implementation for VirtualNetworksDeleteFuture.Result.
+        func (future *VirtualNetworksDeleteFuture) result(client VirtualNetworksClient) (ar autorest.Response, err error) {
+            var done bool
+            done, err = future.DoneWithContext(context.Background(), client)
+            if err != nil {
+                err = autorest.NewErrorWithError(err, "network.VirtualNetworksDeleteFuture", "Result", future.Response(), "Polling failure")
+                return
+            }
+            if !done {
+                    ar.Response = future.Response()
+                err = azure.NewAsyncOpIncompleteError("network.VirtualNetworksDeleteFuture")
+                return
+            }
+            ar.Response = future.Response()
+        return
         }
 

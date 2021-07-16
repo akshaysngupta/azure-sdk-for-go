@@ -619,6 +619,18 @@ package network
         return []SecurityRuleProtocol{Ah,Asterisk,Esp,Icmp,TCP,UDP}
     }
 
+        // SyncRemoteAddressSpace enumerates the values for sync remote address space.
+    type SyncRemoteAddressSpace string
+
+    const (
+                // True ...
+        True SyncRemoteAddressSpace = "true"
+            )
+    // PossibleSyncRemoteAddressSpaceValues returns an array of possible values for the SyncRemoteAddressSpace const type.
+    func PossibleSyncRemoteAddressSpaceValues() []SyncRemoteAddressSpace {
+        return []SyncRemoteAddressSpace{True}
+    }
+
         // TransportProtocol enumerates the values for transport protocol.
     type TransportProtocol string
 
@@ -633,6 +645,40 @@ package network
     // PossibleTransportProtocolValues returns an array of possible values for the TransportProtocol const type.
     func PossibleTransportProtocolValues() []TransportProtocol {
         return []TransportProtocol{TransportProtocolAll,TransportProtocolTCP,TransportProtocolUDP}
+    }
+
+        // VirtualNetworkPeeringLevel enumerates the values for virtual network peering level.
+    type VirtualNetworkPeeringLevel string
+
+    const (
+                // FullyInSync ...
+        FullyInSync VirtualNetworkPeeringLevel = "FullyInSync"
+                // LocalAndRemoteNotInSync ...
+        LocalAndRemoteNotInSync VirtualNetworkPeeringLevel = "LocalAndRemoteNotInSync"
+                // LocalNotInSync ...
+        LocalNotInSync VirtualNetworkPeeringLevel = "LocalNotInSync"
+                // RemoteNotInSync ...
+        RemoteNotInSync VirtualNetworkPeeringLevel = "RemoteNotInSync"
+            )
+    // PossibleVirtualNetworkPeeringLevelValues returns an array of possible values for the VirtualNetworkPeeringLevel const type.
+    func PossibleVirtualNetworkPeeringLevelValues() []VirtualNetworkPeeringLevel {
+        return []VirtualNetworkPeeringLevel{FullyInSync,LocalAndRemoteNotInSync,LocalNotInSync,RemoteNotInSync}
+    }
+
+        // VirtualNetworkPeeringState enumerates the values for virtual network peering state.
+    type VirtualNetworkPeeringState string
+
+    const (
+                // Connected ...
+        Connected VirtualNetworkPeeringState = "Connected"
+                // Disconnected ...
+        Disconnected VirtualNetworkPeeringState = "Disconnected"
+                // Initiated ...
+        Initiated VirtualNetworkPeeringState = "Initiated"
+            )
+    // PossibleVirtualNetworkPeeringStateValues returns an array of possible values for the VirtualNetworkPeeringState const type.
+    func PossibleVirtualNetworkPeeringStateValues() []VirtualNetworkPeeringState {
+        return []VirtualNetworkPeeringState{Connected,Disconnected,Initiated}
     }
 
         // VirtualNetworkPrivateEndpointNetworkPolicies enumerates the values for virtual network private endpoint

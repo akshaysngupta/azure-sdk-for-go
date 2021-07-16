@@ -53,3 +53,89 @@ import (
         }
 
         var _ ApplicationGatewayPrivateEndpointConnectionsClientAPI = (*network.ApplicationGatewayPrivateEndpointConnectionsClient)(nil)
+        // VirtualNetworksClientAPI contains the set of methods on the VirtualNetworksClient type.
+        type VirtualNetworksClientAPI interface {
+            CheckIPAddressAvailability(ctx context.Context, resourceGroupName string, virtualNetworkName string, IPAddress string) (result network.IPAddressAvailabilityResult, err error)
+            CreateOrUpdate(ctx context.Context, resourceGroupName string, virtualNetworkName string, parameters network.VirtualNetwork) (result network.VirtualNetworksCreateOrUpdateFuture, err error)
+            Delete(ctx context.Context, resourceGroupName string, virtualNetworkName string) (result network.VirtualNetworksDeleteFuture, err error)
+            Get(ctx context.Context, resourceGroupName string, virtualNetworkName string, expand string) (result network.VirtualNetwork, err error)
+            List(ctx context.Context, resourceGroupName string) (result network.VirtualNetworkListResultPage, err error)
+                ListComplete(ctx context.Context, resourceGroupName string) (result network.VirtualNetworkListResultIterator, err error)
+            ListAll(ctx context.Context) (result network.VirtualNetworkListResultPage, err error)
+                ListAllComplete(ctx context.Context) (result network.VirtualNetworkListResultIterator, err error)
+            ListUsage(ctx context.Context, resourceGroupName string, virtualNetworkName string) (result network.VirtualNetworkListUsageResultPage, err error)
+                ListUsageComplete(ctx context.Context, resourceGroupName string, virtualNetworkName string) (result network.VirtualNetworkListUsageResultIterator, err error)
+            UpdateTags(ctx context.Context, resourceGroupName string, virtualNetworkName string, parameters network.TagsObject) (result network.VirtualNetwork, err error)
+        }
+
+        var _ VirtualNetworksClientAPI = (*network.VirtualNetworksClient)(nil)
+        // SubnetsClientAPI contains the set of methods on the SubnetsClient type.
+        type SubnetsClientAPI interface {
+            CreateOrUpdate(ctx context.Context, resourceGroupName string, virtualNetworkName string, subnetName string, subnetParameters network.Subnet) (result network.SubnetsCreateOrUpdateFuture, err error)
+            Delete(ctx context.Context, resourceGroupName string, virtualNetworkName string, subnetName string) (result network.SubnetsDeleteFuture, err error)
+            Get(ctx context.Context, resourceGroupName string, virtualNetworkName string, subnetName string, expand string) (result network.Subnet, err error)
+            List(ctx context.Context, resourceGroupName string, virtualNetworkName string) (result network.SubnetListResultPage, err error)
+                ListComplete(ctx context.Context, resourceGroupName string, virtualNetworkName string) (result network.SubnetListResultIterator, err error)
+            PrepareNetworkPolicies(ctx context.Context, resourceGroupName string, virtualNetworkName string, subnetName string, prepareNetworkPoliciesRequestParameters network.PrepareNetworkPoliciesRequest) (result network.SubnetsPrepareNetworkPoliciesFuture, err error)
+            UnprepareNetworkPolicies(ctx context.Context, resourceGroupName string, virtualNetworkName string, subnetName string, unprepareNetworkPoliciesRequestParameters network.UnprepareNetworkPoliciesRequest) (result network.SubnetsUnprepareNetworkPoliciesFuture, err error)
+        }
+
+        var _ SubnetsClientAPI = (*network.SubnetsClient)(nil)
+        // ResourceNavigationLinksClientAPI contains the set of methods on the ResourceNavigationLinksClient type.
+        type ResourceNavigationLinksClientAPI interface {
+            List(ctx context.Context, resourceGroupName string, virtualNetworkName string, subnetName string) (result network.ResourceNavigationLinksListResult, err error)
+        }
+
+        var _ ResourceNavigationLinksClientAPI = (*network.ResourceNavigationLinksClient)(nil)
+        // ServiceAssociationLinksClientAPI contains the set of methods on the ServiceAssociationLinksClient type.
+        type ServiceAssociationLinksClientAPI interface {
+            List(ctx context.Context, resourceGroupName string, virtualNetworkName string, subnetName string) (result network.ServiceAssociationLinksListResult, err error)
+        }
+
+        var _ ServiceAssociationLinksClientAPI = (*network.ServiceAssociationLinksClient)(nil)
+        // VirtualNetworkPeeringsClientAPI contains the set of methods on the VirtualNetworkPeeringsClient type.
+        type VirtualNetworkPeeringsClientAPI interface {
+            CreateOrUpdate(ctx context.Context, resourceGroupName string, virtualNetworkName string, virtualNetworkPeeringName string, virtualNetworkPeeringParameters network.VirtualNetworkPeering, syncRemoteAddressSpace network.SyncRemoteAddressSpace) (result network.VirtualNetworkPeeringsCreateOrUpdateFuture, err error)
+            Delete(ctx context.Context, resourceGroupName string, virtualNetworkName string, virtualNetworkPeeringName string) (result network.VirtualNetworkPeeringsDeleteFuture, err error)
+            Get(ctx context.Context, resourceGroupName string, virtualNetworkName string, virtualNetworkPeeringName string) (result network.VirtualNetworkPeering, err error)
+            List(ctx context.Context, resourceGroupName string, virtualNetworkName string) (result network.VirtualNetworkPeeringListResultPage, err error)
+                ListComplete(ctx context.Context, resourceGroupName string, virtualNetworkName string) (result network.VirtualNetworkPeeringListResultIterator, err error)
+        }
+
+        var _ VirtualNetworkPeeringsClientAPI = (*network.VirtualNetworkPeeringsClient)(nil)
+        // PublicIPAddressesClientAPI contains the set of methods on the PublicIPAddressesClient type.
+        type PublicIPAddressesClientAPI interface {
+            CreateOrUpdate(ctx context.Context, resourceGroupName string, publicIPAddressName string, parameters network.PublicIPAddress) (result network.PublicIPAddressesCreateOrUpdateFuture, err error)
+            Delete(ctx context.Context, resourceGroupName string, publicIPAddressName string) (result network.PublicIPAddressesDeleteFuture, err error)
+            Get(ctx context.Context, resourceGroupName string, publicIPAddressName string, expand string) (result network.PublicIPAddress, err error)
+            List(ctx context.Context, resourceGroupName string) (result network.PublicIPAddressListResultPage, err error)
+                ListComplete(ctx context.Context, resourceGroupName string) (result network.PublicIPAddressListResultIterator, err error)
+            ListAll(ctx context.Context) (result network.PublicIPAddressListResultPage, err error)
+                ListAllComplete(ctx context.Context) (result network.PublicIPAddressListResultIterator, err error)
+            UpdateTags(ctx context.Context, resourceGroupName string, publicIPAddressName string, parameters network.TagsObject) (result network.PublicIPAddress, err error)
+        }
+
+        var _ PublicIPAddressesClientAPI = (*network.PublicIPAddressesClient)(nil)
+        // RouteTablesClientAPI contains the set of methods on the RouteTablesClient type.
+        type RouteTablesClientAPI interface {
+            CreateOrUpdate(ctx context.Context, resourceGroupName string, routeTableName string, parameters network.RouteTable) (result network.RouteTablesCreateOrUpdateFuture, err error)
+            Delete(ctx context.Context, resourceGroupName string, routeTableName string) (result network.RouteTablesDeleteFuture, err error)
+            Get(ctx context.Context, resourceGroupName string, routeTableName string, expand string) (result network.RouteTable, err error)
+            List(ctx context.Context, resourceGroupName string) (result network.RouteTableListResultPage, err error)
+                ListComplete(ctx context.Context, resourceGroupName string) (result network.RouteTableListResultIterator, err error)
+            ListAll(ctx context.Context) (result network.RouteTableListResultPage, err error)
+                ListAllComplete(ctx context.Context) (result network.RouteTableListResultIterator, err error)
+            UpdateTags(ctx context.Context, resourceGroupName string, routeTableName string, parameters network.TagsObject) (result network.RouteTable, err error)
+        }
+
+        var _ RouteTablesClientAPI = (*network.RouteTablesClient)(nil)
+        // RoutesClientAPI contains the set of methods on the RoutesClient type.
+        type RoutesClientAPI interface {
+            CreateOrUpdate(ctx context.Context, resourceGroupName string, routeTableName string, routeName string, routeParameters network.Route) (result network.RoutesCreateOrUpdateFuture, err error)
+            Delete(ctx context.Context, resourceGroupName string, routeTableName string, routeName string) (result network.RoutesDeleteFuture, err error)
+            Get(ctx context.Context, resourceGroupName string, routeTableName string, routeName string) (result network.Route, err error)
+            List(ctx context.Context, resourceGroupName string, routeTableName string) (result network.RouteListResultPage, err error)
+                ListComplete(ctx context.Context, resourceGroupName string, routeTableName string) (result network.RouteListResultIterator, err error)
+        }
+
+        var _ RoutesClientAPI = (*network.RoutesClient)(nil)
