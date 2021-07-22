@@ -1839,10 +1839,18 @@ const fqdn = "github.com/Azure/azure-sdk-for-go/services/network/mgmt/2021-03-01
                 return json.Marshal(objectMap)
         }
 
-            // ApplicationGatewayLoadDistributionTarget ...
+            // ApplicationGatewayLoadDistributionTarget load Distribution Target of an application gateway.
             type ApplicationGatewayLoadDistributionTarget struct {
             // ApplicationGatewayLoadDistributionTargetPropertiesFormat - Properties of the application gateway load distribution target.
             *ApplicationGatewayLoadDistributionTargetPropertiesFormat `json:"properties,omitempty"`
+            // Name - Name of the load distribution policy that is unique within an Application Gateway.
+            Name *string `json:"name,omitempty"`
+            // Etag - READ-ONLY; A unique read-only string that changes whenever the resource is updated.
+            Etag *string `json:"etag,omitempty"`
+            // Type - READ-ONLY; Type of the resource.
+            Type *string `json:"type,omitempty"`
+            // ID - Resource ID.
+            ID *string `json:"id,omitempty"`
             }
 
         // MarshalJSON is the custom marshaler for ApplicationGatewayLoadDistributionTarget.
@@ -1850,6 +1858,12 @@ const fqdn = "github.com/Azure/azure-sdk-for-go/services/network/mgmt/2021-03-01
         objectMap := make(map[string]interface{})
                 if(agldt.ApplicationGatewayLoadDistributionTargetPropertiesFormat != nil) {
                 objectMap["properties"] = agldt.ApplicationGatewayLoadDistributionTargetPropertiesFormat
+                }
+                if(agldt.Name != nil) {
+                objectMap["name"] = agldt.Name
+                }
+                if(agldt.ID != nil) {
+                objectMap["id"] = agldt.ID
                 }
                 return json.Marshal(objectMap)
         }
@@ -1870,6 +1884,42 @@ const fqdn = "github.com/Azure/azure-sdk-for-go/services/network/mgmt/2021-03-01
     return err
     }
         agldt.ApplicationGatewayLoadDistributionTargetPropertiesFormat = &applicationGatewayLoadDistributionTargetPropertiesFormat
+    }
+                case "name":
+    if v != nil {
+        var name string
+        err = json.Unmarshal(*v, &name)
+    if err != nil {
+    return err
+    }
+        agldt.Name = &name
+    }
+                case "etag":
+    if v != nil {
+        var etag string
+        err = json.Unmarshal(*v, &etag)
+    if err != nil {
+    return err
+    }
+        agldt.Etag = &etag
+    }
+                case "type":
+    if v != nil {
+        var typeVar string
+        err = json.Unmarshal(*v, &typeVar)
+    if err != nil {
+    return err
+    }
+        agldt.Type = &typeVar
+    }
+                case "id":
+    if v != nil {
+        var ID string
+        err = json.Unmarshal(*v, &ID)
+    if err != nil {
+    return err
+    }
+        agldt.ID = &ID
     }
             }
         }
